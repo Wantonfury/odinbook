@@ -1,5 +1,5 @@
 const User = require('../models/user');
-const validation = require('../middleware/validation');
+const validation = require('../utils/middleware').validation;
 const passport = require('passport');
 
 exports.login = [

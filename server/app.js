@@ -12,20 +12,18 @@ const MongoStore = require('connect-mongo');
 const FileStore = require('session-file-store')(session);
 
 const User = require('./models/user');
+const ensureAuthenticated = require('./utils/middleware').ensureAuthenticated;
 
-const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
 const authRouter = require('./routes/auth');
 
 const mongoDB = process.env.MONGODB_URI;
 
 async function main() {
-  console.log(mongoDB);
   await mongoose.connect(mongoDB);
   
 }
 main().catch(err => console.log(err));
-
 
 const app = express();
 
@@ -38,7 +36,7 @@ app.use(session({
   secret: process.env.SESS_SECRET,
   resave: false,
   saveUninitialized: false,
-  store: new FileStore(),
+  store: new MongoStore({ mongoUrl: mongoDB })
 }));
 
 app.use(passport.session());
@@ -63,11 +61,10 @@ passport.serializeUser((user, done) => {
 
 passport.deserializeUser((user, done) => {
   done(null, user);
-})
+});
 
-app.use('/', indexRouter);
 app.use('/auth', authRouter);
-app.use('/users', usersRouter);
+app.use('/users', ensureAuthenticated, usersRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

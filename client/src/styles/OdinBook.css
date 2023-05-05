@@ -1,0 +1,16 @@
+.odinbook {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.odinbook span:nth-of-type(1) {
+  color: var(--btn-clr);
+}
+
+.odinbook span:nth-of-type(2) {
+  color: var(--btn-clr);
+}

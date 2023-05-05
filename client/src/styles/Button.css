@@ -1,0 +1,21 @@
+.btn {
+  background-color: var(--btn-clr);
+  color: #fffffe;
+  
+  border-radius: 6px;
+  border: none;
+  
+  width: 60%;
+  height: 40px;
+  
+  cursor: pointer;
+  transition: background-color .1s;
+}
+
+.btn:hover {
+  background-color: var(--btn-clr-hover);
+}
+
+.btn:active {
+  background-color: var(--btn-clr-active);
+}

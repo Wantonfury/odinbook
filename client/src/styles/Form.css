@@ -1,0 +1,26 @@
+.form {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  
+  width: 300px;
+  height: 200px;
+  
+  padding: 10px;
+  gap: 20px;
+  
+  border: 1px solid var(--btn-clr);
+  border-radius: 8px;
+  
+  background-color: white;
+}
+
+.form input[type=text],
+.form input[type=password] {
+  width: 90%;
+}
+
+.form input:focus {
+  outline-color: var(--btn-clr);
+}

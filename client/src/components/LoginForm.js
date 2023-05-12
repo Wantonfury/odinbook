@@ -16,13 +16,15 @@ const LoginForm = () => {
     e.preventDefault();
     
     login(data)
-      .then(user => {
+      .then(res => {
         setUser({
-          ...user,
+          ...res.data,
           loggedIn: true
         })
       })
       .catch(err => console.log(err));
+    
+    return true;
   }
   
   const handleChange = (e) => {

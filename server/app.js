@@ -13,8 +13,10 @@ const FileStore = require('session-file-store')(session);
 
 const User = require('./models/user');
 const ensureAuthenticated = require('./utils/middleware').ensureAuthenticated;
+const cookieOpts = require('./utils/settings').cookieOpts;
 
 const usersRouter = require('./routes/users');
+const commentsRouter = require('./routes/comments');
 const authRouter = require('./routes/auth');
 
 const mongoDB = process.env.MONGODB_URI;
@@ -36,7 +38,7 @@ app.use(session({
   secret: process.env.SESS_SECRET,
   resave: false,
   saveUninitialized: false,
-  store: new MongoStore({ mongoUrl: mongoDB })
+  store: new MongoStore({ mongoUrl: mongoDB }),
 }));
 
 app.use(passport.session());
@@ -56,7 +58,7 @@ passport.use("login", new LocalStrategy((username, password, done) => {
 }));
 
 passport.serializeUser((user, done) => {
-  done(null, { username: user.username });
+  done(null, { username: user.username, _id: user._id, first_name: user.first_name, last_name: user.last_name });
 });
 
 passport.deserializeUser((user, done) => {
@@ -65,6 +67,7 @@ passport.deserializeUser((user, done) => {
 
 app.use('/auth', authRouter);
 app.use('/users', ensureAuthenticated, usersRouter);
+app.use('/comments', ensureAuthenticated, commentsRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

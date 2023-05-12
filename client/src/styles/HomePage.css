@@ -1,0 +1,15 @@
+#homepage {
+  display: flex;
+  justify-content: space-between;
+  
+  padding: 20px;
+  
+  background-color: var(--background);
+  
+  min-height: calc(100vh - 40px);
+}
+
+.middle {
+  width: 70%;
+  height: 100%;
+}

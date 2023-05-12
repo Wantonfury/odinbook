@@ -12,6 +12,10 @@
   transition: background-color .1s;
 }
 
+.btn-wide {
+  width: 100%;
+}
+
 .btn:hover {
   background-color: var(--btn-clr-hover);
 }

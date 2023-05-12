@@ -2,11 +2,19 @@
   --btn-clr: #3da9fc;
   --btn-clr-hover: #038df6;
   --btn-clr-active: #037bd7;
+  --btn-contacts-hover: #7cc6fb;
+  --btn-contacts-active: #4eb2fa;
   --background: #d8eefe;
+  --card: white;
 }
 
 .App {
   text-align: center;
-  height: 100vh;
+  min-height: 100vh;
   width: 100%;
+  
+  margin: 0;
+  padding: 0;
+  
+  background-color: var(--background);
 }

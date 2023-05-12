@@ -1,7 +1,6 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
 
 const UserSchema = new Schema({
   username: { type: String, minLength: 3, required: true, unique: true },
@@ -20,10 +19,6 @@ UserSchema.pre('save', function(next) {
 
 UserSchema.methods.isValidPassword = function(password) {
   return bcrypt.compareSync(password, this.password);
-}
-
-UserSchema.methods.generateToken = function() {
-  return jwt.sign({ username: this.username }, 'SECRET_KEY');
 }
 
 module.exports = mongoose.model("User", UserSchema);

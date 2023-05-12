@@ -2,8 +2,10 @@ const express = require('express');
 const router = express.Router();
 const userController = require('../controllers/userController');
 
-router.post('/secureRoute', userController.secureRoute);
-router.post('/secureRoute2', userController.secureRoute2);
-router.post('/secureRoute3', userController.secureRoute3);
+router.get('/get_non_friends', userController.getNonFriends);
+router.get('/get_pending_friends', userController.getPendingFriends);
+
+router.get('/get_friends', userController.getFriends);
+router.post('/add_friend', userController.addFriend);
 
 module.exports = router;

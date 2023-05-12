@@ -1,6 +1,16 @@
 const User = require('../models/user');
 const validation = require('../utils/middleware').validation;
 const passport = require('passport');
+const cookieOpts = require('../utils/settings').cookieOpts;
+
+const generateUserData = (user) => {
+  return {
+    username: user.username,
+    first_name: user.first_name,
+    last_name: user.last_name,
+    pfp: null
+  }
+}
 
 exports.login = [
   validation,
@@ -11,11 +21,19 @@ exports.login = [
       
       req.login(user, (err) => {
         if (err) return next(err);
-        res.status(200).json({ username: user.username });
+        res.status(200).json(generateUserData(req.user));
       });
     })(req, res, next);
   }
 ];
+
+exports.isLoggedIn = (req, res, next) => {
+  if (req.isAuthenticated()) {
+    return res.status(200).json(generateUserData(req.user));
+  }
+  
+  res.status(401).send();
+}
 
 exports.signup = [
   validation,
@@ -46,8 +64,8 @@ exports.signup = [
 ];
 
 exports.logout = (req, res, next) => {
-  req.logout((err) => {
+  req.session.destroy(err => {
     if (err) return next(err);
-    res.status(200).send();
-  });
+    res.clearCookie('connect.sid').status(200).send();
+  })
 }

@@ -8,7 +8,8 @@ const generateUserData = (user) => {
     username: user.username,
     first_name: user.first_name,
     last_name: user.last_name,
-    pfp: null
+    pfp: null,
+    id: user._id
   }
 }
 

@@ -16,7 +16,7 @@ const ensureAuthenticated = require('./utils/middleware').ensureAuthenticated;
 const cookieOpts = require('./utils/settings').cookieOpts;
 
 const usersRouter = require('./routes/users');
-const commentsRouter = require('./routes/comments');
+const postsRouter = require('./routes/posts');
 const authRouter = require('./routes/auth');
 
 const mongoDB = process.env.MONGODB_URI;
@@ -67,7 +67,7 @@ passport.deserializeUser((user, done) => {
 
 app.use('/auth', authRouter);
 app.use('/users', ensureAuthenticated, usersRouter);
-app.use('/comments', ensureAuthenticated, commentsRouter);
+app.use('/posts', ensureAuthenticated, postsRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

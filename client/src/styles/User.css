@@ -20,3 +20,31 @@
   min-width: 100%;
   min-height: auto;
 }
+
+.user-profile-picture,
+.user-profile-name {
+  cursor: pointer;
+}
+
+.user-profile-picture {
+  width: 40px;
+  height: auto;
+  
+  transition: transform .1s;
+}
+
+.user-profile-picture-large {
+  width: 100px;
+}
+
+.user-profile-picture:hover {
+  transform: scale(1.05);
+}
+
+.user-profile-name {
+  font-weight: 500;
+}
+
+.user-profile-name:hover {
+  text-decoration: underline;
+}

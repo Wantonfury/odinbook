@@ -1,0 +1,66 @@
+.user-page {
+  display: flex;
+  flex-direction: column;
+  
+  gap: 40px;
+  padding: 20px;
+}
+
+.user-page-cnt {
+  display: flex;
+  justify-content: center;
+  
+  gap: 40px;
+}
+
+.user-friends {
+  display: flex;
+  flex-direction: column;
+  
+  height: fit-content;
+  width: 400px;
+}
+
+.user-friends-cnt {
+  display: flex;
+  gap: 10px;
+  
+  height: fit-content;
+  width: 100%;
+}
+
+.user-friends-user {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.user-page-info {
+  display: flex;
+  justify-content: space-around;
+}
+
+.user-page-info-options {
+  display: flex;
+  align-items: flex-end;
+  
+  gap: 10px;
+}
+
+.user-page-info-user {
+  display: flex;
+  align-items: center;
+}
+
+.user-page-info-user-cnt {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  
+  height: 100%;
+  gap: 10px;
+}
+
+.user-page-info-pfp {
+  
+}

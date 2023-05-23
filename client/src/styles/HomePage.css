@@ -5,11 +5,12 @@
   padding: 20px;
   
   background-color: var(--background);
-  
-  min-height: calc(100vh - 40px);
+/*   
+  min-height: calc(100vh - 40px); */
 }
 
 .middle {
-  width: 70%;
+  min-width: 400px;
+  width: 800px;
   height: 100%;
 }

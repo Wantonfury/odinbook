@@ -1,0 +1,13 @@
+.svg {
+  transition: transform .1s;
+}
+
+.svg:hover {
+  filter: brightness(0) saturate(100%) invert(38%) sepia(96%) saturate(2362%) hue-rotate(186deg) brightness(99%) contrast(98%);
+  transform: scale(1.05);
+}
+
+.svg:active {
+  filter: brightness(0) saturate(100%) invert(32%) sepia(73%) saturate(2627%) hue-rotate(188deg) brightness(92%) contrast(98%);
+  transform: scale(1);
+}

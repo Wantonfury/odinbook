@@ -35,7 +35,7 @@ const LoginForm = () => {
   }
   
   return (
-    <form className="form" onSubmit={handleSubmit}>
+    <form className="form form-border" onSubmit={handleSubmit}>
       <input type="text" name="username" placeholder="Username" onChange={handleChange} />
       <input type="password" name="password" placeholder="Password" onChange={handleChange} />
       <button className="btn" type="submit">Log in</button>

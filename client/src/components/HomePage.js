@@ -4,7 +4,7 @@ import { logout } from '../apis/userAPI';
 import UserContext from '../contexts/UserContext';
 import { useState, useContext } from "react";
 import Options from './HomePage/Options';
-import Comments from './HomePage/Comments';
+import Posts from './HomePage/Posts';
 import Contacts from './HomePage/Contacts';
 import FindFriends from './HomePage/FindFriends';
 
@@ -31,11 +31,11 @@ const HomePage = () => {
   const handleOptions = () => {
     switch (option) {
       case options.recent:
-        return <Comments />
+        return <Posts />
       case options.findFriends:
         return <FindFriends updateContacts={setUpdateContacts} />
       default:
-        return <Comments />
+        return null;
     }
   }
   

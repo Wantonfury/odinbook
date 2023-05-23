@@ -1,14 +1,7 @@
 const User = require('../models/user');
 const Friendship = require('../models/friendship');
+const { generateUserData } = require('../utils/miscellaneous');
 
-const generateUserData = (user) => {
-  return {
-    id: user._id,
-    first_name: user.first_name,
-    last_name: user.last_name,
-    pfp: null
-  }
-}
 
 exports.getNonFriends = async (req, res, next) => {
   const start = req.body.start;
@@ -100,4 +93,18 @@ exports.getFriends = async (req, res, next) => {
   } catch(err) {
     res.status(200).json([]);
   }
+}
+
+exports.getFriendsUser = (req, res, next) => {
+  Friendship.find({ "friendship": req.query.id, pending: false }).populate('friendship')
+    .then(friendships => {
+      res.status(200).json(friendships.map(friendship => generateUserData(friendship.friendship[0]._id == req.query.id ? friendship.friendship[1] : friendship.friendship[0])));
+    });
+}
+
+exports.getUser = (req, res, next) => {
+  User.findOne({ _id: req.query.id })
+    .then(user => {
+      res.status(200).json(generateUserData(user));
+    })
 }

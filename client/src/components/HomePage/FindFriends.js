@@ -14,6 +14,8 @@ const FindFriends = (props) => {
   let userCount = 10;
   
   useEffect(() => {
+    if (!loading) return;
+    
     Promise.all([
     getNonFriends(userCount, userCount + 10)
       .then(res => setUsers(res.data))

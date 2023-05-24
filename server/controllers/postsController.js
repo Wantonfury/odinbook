@@ -16,7 +16,7 @@ exports.get_posts_all = async (req, res, next) => {
 
 exports.get_posts_user = (req, res, next) => {
   Post.find({ user: req.query.id }).populate('user').sort({ 'date': -1 })
-    .then(posts => res.status(200).json(posts.map(post => generatePost(post, req.user._id))));
+    .then(posts => res.status(200).json(posts?.map(post => generatePost(post, req.user._id))));
 }
 
 exports.get_comments = (req, res, next) => {

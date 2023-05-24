@@ -13,6 +13,8 @@ const UserInfo = (props) => {
   const { user } = useContext(UserContext);
   
   useEffect(() => {
+    if (!user.userPageId) return;
+    
     getUser(user.userPageId)
       .then(res => setUserData(res.data ? { ...res.data } : {}))
       .finally(() => setLoading(false));

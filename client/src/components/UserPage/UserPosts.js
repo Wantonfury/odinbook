@@ -11,6 +11,8 @@ const UserPosts = (props) => {
   const { user } = useContext(UserContext);
   
   useEffect(() => {
+    if (!user.userPageId) return;
+    
     getPostsUser(user.userPageId)
       .then(res => 
         {

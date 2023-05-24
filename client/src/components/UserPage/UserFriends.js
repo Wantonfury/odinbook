@@ -12,6 +12,8 @@ const UserFriends = (props) => {
   const { user } = useContext(UserContext);
   
   useEffect(() => {
+    if (!user.userPageId) return;
+    
     getFriendsUser(user.userPageId)
       .then(res => {
         setFriends(res.data ? res.data : []);

@@ -10,7 +10,7 @@ const Header = () => {
   const handleHome = () => {
     setUser({
       ...user,
-      userPageId: null
+      userPageId: ''
     });
   }
   

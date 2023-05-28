@@ -3,18 +3,18 @@ import '../styles/User.css';
 import { useContext } from 'react';
 import UserContext from '../contexts/UserContext';
 
-const UserProfilePicture = (props) => {
+const UserProfilePicture = ({ id, large }) => {
   const { user, setUser } = useContext(UserContext);
   
   const handleClick = () => {
-    if (props.id) setUser({
+    if (id) setUser({
       ...user,
-      userPageId: props.id
+      userPageId: id
     });
   }
   
   return (
-    <img className={`user-profile-picture ${props.large ? 'user-profile-picture-large': ''}`} src={DefaultProfileImage} alt="Profile" onClick={handleClick} />
+    <img className={`user-profile-picture ${large ? 'user-profile-picture-large': ''}`} src={DefaultProfileImage} alt="Profile" onClick={handleClick} />
   );
 }
 

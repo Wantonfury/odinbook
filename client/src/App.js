@@ -9,6 +9,7 @@ import { checkLogin } from './apis/userAPI';
 import { ModalProvider } from './contexts/ModalContext';
 import Header from './components/Header';
 import UserPage from './components/UserPage';
+import ChatBox from './components/ChatBox/ChatBox';
 
 const defaultUser = {
   username: '',
@@ -57,6 +58,8 @@ function App() {
             loading ? <LoadingIcon /> : 
               user.loggedIn ? currentPage : <LoginPage />
           }
+          
+          { user.chatbox ? <ChatBox /> : null }
         </div>
       </ModalProvider>
     </UserContext.Provider>

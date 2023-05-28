@@ -66,7 +66,6 @@ exports.addFriend = async (req, res, next) => {
     if (friendship) {
       friendship.pending = false;
     } else {
-      console.log(req.user);
       friendship = new Friendship({
         friendship: [req.user._id, user._id],
         pending: true
@@ -98,13 +97,13 @@ exports.getFriends = async (req, res, next) => {
 exports.getFriendsUser = (req, res, next) => {
   Friendship.find({ "friendship": req.query.id, pending: false }).populate('friendship')
     .then(friendships => {
-      res.status(200).json(friendships.map(friendship => generateUserData(friendship.friendship[0]._id == req.query.id ? friendship.friendship[1] : friendship.friendship[0])));
+      res.status(200).json(friendships?.map(friendship => generateUserData(friendship.friendship[0]._id == req.query.id ? friendship.friendship[1] : friendship.friendship[0])));
     });
 }
 
 exports.getUser = (req, res, next) => {
   User.findOne({ _id: req.query.id })
     .then(user => {
-      res.status(200).json(generateUserData(user));
+      res.status(200).json(!user ? [] : generateUserData(user));
     })
 }

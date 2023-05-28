@@ -8,12 +8,14 @@
   gap: 6px;
 }
 
-.chatbox-window {
+.chatbox-log {
   display: flex;
   flex-direction: column-reverse;
   
-  width: 100%;
+  width: fit-content;
   height: 300px;
+  
+  gap: 10px;
   
   list-style: none;
   
@@ -23,18 +25,18 @@
   overflow-y: auto;
   overflow-x: hidden;
   
-  padding: 0px 6px;
+  padding: 6px 6px;
   margin: 0;
   box-sizing: border-box;
 }
 
-.chatbox-window li {
+.chatbox-log li {
   text-align: left;
   max-width: 100%;
   width: 100%;
 }
 
-.chatbox-window span {
+.chatbox-log span {
   display: flex;
   flex-wrap: wrap;
   
@@ -45,6 +47,26 @@
   text-align: left;
   
   width: 100%;
+}
+
+.log-cnt {
+  background-color: rgba(128, 128, 128, 0.2);
+  border-radius: 16px;
+  padding: 4px 8px;
+}
+
+.log-user {
+  display: flex;
+  align-items: center;
+  
+  gap: 4px;
+  
+  font-weight: 600;
+  font-size: 16px;
+}
+
+.log-message {
+  font-size: 14px;
 }
 
 .chatbox-input {

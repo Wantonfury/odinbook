@@ -10,7 +10,7 @@ const Post = (props) => {
   const handleLike = (e) => {
     e.target.classList.contains('liked') ? e.target.classList.remove('liked') : e.target.classList.add('liked');
     
-    addLike({ id: props.id })
+    addLike(props.post.id)
       .then(res => {
         res.data.liked ? e.target.classList.add('liked') : e.target.classList.remove('liked');
       });

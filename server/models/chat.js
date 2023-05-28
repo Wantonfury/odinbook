@@ -7,7 +7,7 @@ const ChatSchema = new Schema({
     message: { type: String, minLength: 1, maxLength: 100, required: true },
     user: { type: Schema.Types.ObjectId, ref: 'User', required: true},
     date: { type: Date, required: true },
-    read: [{ type: Boolean, required: true }]
+    read: [{ type: Schema.Types.ObjectId, ref: 'User', required: true }]
   }]
 });
 

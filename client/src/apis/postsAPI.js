@@ -23,6 +23,6 @@ export const addComment = (id, comment) => {
   return axios.post(`${SERVER}/posts/add_comment`, { id, comment });
 }
 
-export const addLike = (data) => {
-  return axios.post(`${SERVER}/posts/like`, data);
+export const addLike = (id) => {
+  return axios.post(`${SERVER}/posts/like`, { id });
 }

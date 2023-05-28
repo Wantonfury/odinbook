@@ -15,6 +15,21 @@ exports.getMessages = (req, res, next) => {
     .catch(err => next(err));
 }
 
+exports.getUnreadMessagesCount = (req, res, next) => {
+  Chat.findOne({ $and: [
+    { users: req.user._id },
+    { users: req.query.id }
+  ]})
+    .then(chat => {
+      let unreadMessages = chat?.messages.reduce((acc, message) => {
+        return message.user == req.user._id || message.read.includes(req.user._id) ? acc : acc + 1;
+      }, 0);
+      
+      res.status(200).json(unreadMessages ? unreadMessages : 0);
+    })
+    .catch(err => next(err));
+}
+
 exports.addMessage = [
   body('message', 'Message must be between 1 and 100 characters.')
     .trim()
@@ -62,5 +77,24 @@ exports.addMessage = [
 ]
 
 exports.readMessages = (req, res, next) => {
-  
+  console.log(req.body);
+  Chat.findOne({ $and: [
+    { users: req.user._id },
+    { users: req.body.id }
+  ]})
+    .then(chat => {
+      if (!chat) return res.status(200).send();
+      
+      chat.messages = chat.messages.map(message => {
+        return {
+          ...message,
+          read: req.body.messages.includes(message._id.toString()) ? [...message.read, req.user._id] : message.read
+        }
+      });
+      
+      chat.save()
+        .then(() => res.status(200).send())
+        .catch(err => next(err));
+    })
+    .catch(err => next(err));
 }

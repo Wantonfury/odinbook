@@ -1,6 +1,6 @@
 import LoadingIcon from "../LoadingIcon";
 import { useState, useEffect, useReducer } from "react";
-import { getMessages } from "../../apis/chatAPI";
+import { getMessages, readMessages } from "../../apis/chatAPI";
 import dayjs from "dayjs";
 import relativeTime from 'dayjs/plugin/relativeTime';
 import UserName from "../UserName";
@@ -16,7 +16,7 @@ const reducer = (state, action) => {
   }
 }
 
-const ChatLog = ({ user }) => {
+const ChatLog = ({ user, setUser }) => {
   const [messages, dispatch] = useReducer(reducer, []);
   const [loading, setLoading] = useState(true);
   
@@ -53,6 +53,23 @@ const ChatLog = ({ user }) => {
       .finally(() => setLoading(false));
   }, [user.chatbox, loading]);
   
+  useEffect(() => {
+    const messagesId = [];
+    
+    for (let i = 0; i < messages.length; ++i) {
+      for (let j = 0; j < messages[i].length; ++j) {
+        if (user.id !== messages[i][j].user._id && !messages[i][j].read.includes(user.id))
+          messagesId.push(messages[i][j]._id);
+      }
+    }
+    
+    readMessages(user.id, messagesId)
+      .then(() => setUser({
+        ...user,
+        updateRead: user.chatbox
+      }));
+  }, [messages, setUser]);
+  
   return (
     <ul className="chatbox-log">
         {
@@ -60,10 +77,10 @@ const ChatLog = ({ user }) => {
             messages.map((messageGroup, indexGroup) => {
               return (
                 <li className="log-cnt" key={indexGroup}>
-                  {/* <span className="log-user">{`${messageGroup[0].user.full_name}: `}</span> */}
                   <div className="log-user">
                     <UserProfilePicture id={messageGroup[0].user._id} />
                     <UserName id={messageGroup[0].user._id} full_name={messageGroup[0].user.full_name} />
+                    <p className="log-date">{ messageGroup[messageGroup.length - 1].date }</p>
                   </div>
                   
                   {

@@ -7,11 +7,11 @@ import ChatLog from './ChatLog';
 import ChatInput from './ChatInput';
 
 const ChatBox = () => {
-  const { user } = useContext(UserContext);
+  const { user, setUser } = useContext(UserContext);
   
   return (
     <div className="chatbox card">
-      <ChatLog user={user} />
+      <ChatLog user={user} setUser={setUser} />
       
       <ChatInput user={user} />
     </div>

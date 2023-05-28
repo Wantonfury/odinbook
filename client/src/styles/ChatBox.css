@@ -69,6 +69,17 @@
   font-size: 14px;
 }
 
+.log-date {
+  font-size: 12px;
+  font-weight: 400;
+  
+  margin: 0px 8px 0px 0px;
+  padding: 0;
+  
+  margin-left: auto !important;
+  text-align: right !important;
+}
+
 .chatbox-input {
   display: flex;
   gap: 6px;

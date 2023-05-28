@@ -2,21 +2,21 @@ import '../styles/User.css';
 import { useContext } from "react";
 import UserContext from '../contexts/UserContext';
 
-const UserName = (props) => {
+const UserName = ({ id, full_name }) => {
   const { user, setUser } = useContext(UserContext);
   
   const handleClick = () => {
-    if (!props.id) return;
+    if (!id) return;
     
     setUser({
       ...user,
-      userPageId: props.id
+      userPageId: id
     });
     console.log("User changed");
   }
   
   return (
-    <span className="user-profile-name" onClick={handleClick}>{props.full_name}</span>
+    <span className="user-profile-name" onClick={handleClick}>{full_name}</span>
   );
 }
 

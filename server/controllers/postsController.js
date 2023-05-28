@@ -28,9 +28,9 @@ exports.get_comments = (req, res, next) => {
 }
 
 exports.add_comment = [
-  body('comment', 'Comment must be between 5 and 100 characters.')
+  body('comment', 'Comment must be between 3 and 100 characters.')
     .trim()
-    .isLength({ min: 5, max: 100 })
+    .isLength({ min: 3, max: 100 })
     .escape(),
   (req, res, next) => {
     const errors = validationResult(req);
@@ -58,9 +58,9 @@ exports.add_comment = [
 ]
 
 exports.post = [
-  body('message', 'Message must be between 5 and 255 characters.')
+  body('message', 'Message must be between 3 and 255 characters.')
     .trim()
-    .isLength({ min: 5, max: 255 })
+    .isLength({ min: 3, max: 255 })
     .escape(),
   (req, res, next) => {
     const errors = validationResult(req);

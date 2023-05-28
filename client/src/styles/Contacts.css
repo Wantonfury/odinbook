@@ -1,3 +1,15 @@
+@keyframes flash {
+  0% {
+    background-color: var(--background);
+  }
+  50% {
+    background-color: var(--btn-contacts-hover);
+  }
+  100% {
+    background-color: var(--background);
+  }
+}
+
 #contacts {
   display: flex;
   flex-direction: column;
@@ -5,12 +17,15 @@
   
   gap: 10px;
   
-  width: 10%;
+  width: fit-content;
 }
 
 .contact {
   display: flex;
   align-items: center;
+  
+  min-width: 200px;
+  max-width: fit-content;
   
   gap: 4px;
   cursor: pointer;
@@ -19,7 +34,7 @@
 }
 
 .contact:hover {
-  background-color: var(--btn-contacts-hover);
+  background-color: var(--btn-contacts-hover) !important;
 }
 
 .contact:active {
@@ -29,4 +44,10 @@
 .contact img {
   width: 40px;
   height: auto;
+}
+
+.contact-notification {
+  animation: flash 2s infinite;
+  -webkit-animation: flash 2s infinite;
+  -moz-animation: flash 2s infinite;
 }

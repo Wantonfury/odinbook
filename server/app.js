@@ -9,7 +9,6 @@ const LocalStrategy = require('passport-local').Strategy;
 const cors = require('cors');
 const mongoose = require('mongoose');
 const MongoStore = require('connect-mongo');
-const FileStore = require('session-file-store')(session);
 
 const User = require('./models/user');
 const ensureAuthenticated = require('./utils/middleware').ensureAuthenticated;

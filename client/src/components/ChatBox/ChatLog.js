@@ -3,6 +3,8 @@ import { useState, useEffect, useReducer } from "react";
 import { getMessages } from "../../apis/chatAPI";
 import dayjs from "dayjs";
 import relativeTime from 'dayjs/plugin/relativeTime';
+import UserName from "../UserName";
+import UserProfilePicture from "../UserProfilePicture";
 dayjs.extend(relativeTime);
 
 const reducer = (state, action) => {
@@ -34,22 +36,43 @@ const ChatLog = ({ user }) => {
         
         data.reverse();
         
-        dispatch({ type: 'UPDATE', messages: data })
+        let dataGrouped = [];
+        
+        for (let i = 0, arr = []; i < data.length; ++i) {
+          arr.push(data[i]);
+          
+          if (i < data.length - 1 && data[i].user._id === data[i + 1].user._id)
+            continue;
+          
+          dataGrouped.push(arr);
+          arr = [];
+        }
+        
+        dispatch({ type: 'UPDATE', messages: dataGrouped })
       })
       .finally(() => setLoading(false));
   }, [user.chatbox, loading]);
   
   return (
-    <ul className="chatbox-window">
+    <ul className="chatbox-log">
         {
           loading ? <LoadingIcon /> :
-            messages.map((message, index, oldArr) => {
+            messages.map((messageGroup, indexGroup) => {
               return (
-                <li key={index}>
-                  { index < oldArr.length - 1 && message.user._id === oldArr[index + 1].user._id ? null : <span>{`${message.user.full_name}: `}</span> }
-                  <span className="chatbox-text">{message.message}</span>
+                <li className="log-cnt" key={indexGroup}>
+                  {/* <span className="log-user">{`${messageGroup[0].user.full_name}: `}</span> */}
+                  <div className="log-user">
+                    <UserProfilePicture id={messageGroup[0].user._id} />
+                    <UserName id={messageGroup[0].user._id} full_name={messageGroup[0].user.full_name} />
+                  </div>
+                  
+                  {
+                    messageGroup.map((message, index) => {
+                      return <span className="log-message" key={index}>{message.message}</span>
+                    })
+                  }
                 </li>
-              );
+              )
             })
         }
       </ul>

@@ -2,10 +2,12 @@ import DefaultProfileImage from '../assets/images/account-default-image.svg';
 import '../styles/Contacts.css';
 import { useContext, useEffect, useState } from "react";
 import UserContext from '../contexts/UserContext';
+import ChatContext from '../contexts/ChatContext';
 import { getUnreadMessagesCount } from '../apis/chatAPI';
 
 const UserNameplate = (props) => {
   const { user, setUser } = useContext(UserContext);
+  const { setChatBoxId } = useContext(ChatContext);
   const [unreadMessages, setUnreadMessages] = useState();
   const [updateUnreadMessages, setUpdateUnreadMessages] = useState(false);
   
@@ -28,10 +30,11 @@ const UserNameplate = (props) => {
   }, [user.updateRead, props.user, setUser]);
   
   const handleClick = () => {
-    setUser({
-      ...user,
-      chatbox: props.user.id
-    })
+    // setUser({
+    //   ...user,
+    //   chatbox: props.user.id
+    // })
+    setChatBoxId(props.user.id);
   }
   
   return (

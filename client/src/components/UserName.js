@@ -3,20 +3,18 @@ import { useContext } from "react";
 import UserContext from '../contexts/UserContext';
 
 const UserName = ({ id, full_name }) => {
-  const { user, setUser } = useContext(UserContext);
+  const { setUserPageId } = useContext(UserContext);
   
   const handleClick = () => {
     if (!id) return;
     
-    setUser({
-      ...user,
-      userPageId: id
-    });
-    console.log("User changed");
+    setUserPageId(id);
   }
   
   return (
-    <span className="user-profile-name" onClick={handleClick}>{full_name}</span>
+    <button className="user-profile-name" onClick={handleClick}>
+      <span className='user-profile-name-span'>{full_name}</span>
+    </button>
   );
 }
 

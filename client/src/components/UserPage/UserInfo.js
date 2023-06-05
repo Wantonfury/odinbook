@@ -10,15 +10,15 @@ import UserContext from "../../contexts/UserContext";
 const UserInfo = (props) => {
   const [userData, setUserData] = useState({});
   const [loading, setLoading] = useState(true);
-  const { user } = useContext(UserContext);
+  const { user, userPageId } = useContext(UserContext);
   
   useEffect(() => {
-    if (!user.userPageId) return;
+    if (!userPageId) return;
     
-    getUser(user.userPageId)
+    getUser(userPageId)
       .then(res => setUserData(res.data ? { ...res.data } : {}))
       .finally(() => setLoading(false));
-  }, [loading, user.userPageId]);
+  }, [loading, userPageId]);
   
   return (
     <div className="card user-page-info">
@@ -37,8 +37,8 @@ const UserInfo = (props) => {
       {
         user.id === userData.id ? <div></div> :
           <div className='user-page-info-options'>
-            <BtnUnfriend />
-            <BtnMessage />
+            <BtnUnfriend id={user.id} />
+            <BtnMessage id={user.id} />
           </div>
       }
     </div>

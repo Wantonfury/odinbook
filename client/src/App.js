@@ -8,9 +8,10 @@ import HomePage from './components/HomePage';
 import LoadingIcon from './components/LoadingIcon';
 import { checkLogin } from './apis/userAPI';
 import { ModalProvider } from './contexts/ModalContext';
-import Header from './components/Header';
+import NavBar from './components/NavBar/NavBar';
 import UserPage from './components/UserPage';
 import ChatBox from './components/ChatBox/ChatBox';
+import ChatContext from './contexts/ChatContext';
 import io from 'socket.io-client';
 
 const SERVER = process.env.REACT_APP_SERVER;
@@ -25,6 +26,8 @@ function App() {
   const [user, setUser] = useState(defaultUser);
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(<HomePage />);
+  const [chatBoxId, setChatBoxId] = useState(null);
+  const [userPageId, setUserPageId] = useState(null);
   
   useEffect(() => {
     checkLogin()
@@ -49,25 +52,27 @@ function App() {
   // }
   
   useEffect(() => {
-    if (user.userPageId) setCurrentPage(<UserPage />);
+    if (userPageId) setCurrentPage(<UserPage />);
     else setCurrentPage(<HomePage />);
-  }, [user.userPageId]);
+  }, [userPageId]);
   
   return (
     <SocketContext.Provider value={{ socket }}>
-      <UserContext.Provider value={{ user, setUser }}>
-        <ModalProvider>
-          <div className="App">
-            {loading ? null : <Header />}
-            
-            {
-              loading ? <LoadingIcon /> : 
-                user.loggedIn ? currentPage : <LoginPage />
-            }
-            
-            { user.chatbox ? <ChatBox /> : null }
-          </div>
-        </ModalProvider>
+      <UserContext.Provider value={{ user, setUser, userPageId, setUserPageId }}>
+        <ChatContext.Provider value={{ chatBoxId, setChatBoxId }}>
+          <ModalProvider>
+            <div className="App">
+              {loading ? null : <NavBar />}
+              
+              {
+                loading ? <LoadingIcon /> : 
+                  user.loggedIn ? currentPage : <LoginPage />
+              }
+              
+              { chatBoxId ? <ChatBox /> : null }
+            </div>
+          </ModalProvider>
+        </ChatContext.Provider>
       </UserContext.Provider>
     </SocketContext.Provider>
   );

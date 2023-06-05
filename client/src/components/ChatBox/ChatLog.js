@@ -1,10 +1,12 @@
 import LoadingIcon from "../LoadingIcon";
-import { useState, useEffect, useReducer } from "react";
+import { useState, useEffect, useReducer, useContext } from "react";
 import { getMessages, readMessages } from "../../apis/chatAPI";
 import dayjs from "dayjs";
 import relativeTime from 'dayjs/plugin/relativeTime';
 import UserName from "../UserName";
 import UserProfilePicture from "../UserProfilePicture";
+import SocketContext from '../../contexts/SocketContext';
+import ChatContext from "../../contexts/ChatContext";
 dayjs.extend(relativeTime);
 
 const reducer = (state, action) => {
@@ -19,9 +21,13 @@ const reducer = (state, action) => {
 const ChatLog = ({ user, setUser }) => {
   const [messages, dispatch] = useReducer(reducer, []);
   const [loading, setLoading] = useState(true);
+  const { socket } = useContext(SocketContext);
+  const { chatBoxId } = useContext(ChatContext);
   
   useEffect(() => {
-    getMessages(user.chatbox)
+    if (!chatBoxId) return;
+    
+    getMessages(chatBoxId)
       .then(res => {
         const data = !res.data ? [] : res.data.map(message => {
           return {
@@ -44,14 +50,14 @@ const ChatLog = ({ user, setUser }) => {
           if (i < data.length - 1 && data[i].user._id === data[i + 1].user._id)
             continue;
           
-          dataGrouped.push(arr);
+          dataGrouped.push(arr.reverse());
           arr = [];
         }
         
         dispatch({ type: 'UPDATE', messages: dataGrouped })
       })
       .finally(() => setLoading(false));
-  }, [user.chatbox, loading]);
+  }, [chatBoxId, loading]);
   
   useEffect(() => {
     const messagesId = [];
@@ -69,6 +75,12 @@ const ChatLog = ({ user, setUser }) => {
         updateRead: user.chatbox
       }));
   }, [messages, setUser]);
+  
+  useEffect(() => {
+    socket.on('receive_message', () => {
+      setLoading(true);
+    });
+  }, [socket]);
   
   return (
     <ul className="chatbox-log">

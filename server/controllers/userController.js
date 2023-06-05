@@ -107,3 +107,26 @@ exports.getUser = (req, res, next) => {
       res.status(200).json(!user ? [] : generateUserData(user));
     })
 }
+
+exports.searchUsers = (req, res, next) => {
+  const reg = req.query.search ? new RegExp(req.query.search, 'i') : '';
+  
+  User.find({ full_name: reg })
+    .then(users => {
+      res.status(200).json(users ? users.map(user => generateUserData(user)) : []);
+    })
+    .catch(err => next(err));
+}
+
+exports.changeName = (req, res, next) => {
+  User.findOne({ _id: req.user._id })
+    .then(user => {
+      user.first_name = req.body.first_name ? req.body.first_name : user.first_name;
+      user.last_name = req.body.last_name ? req.body.last_name : user.last_name;
+      
+      user.save()
+        .then(() => res.status(200).send())
+        .catch(err => next(err));
+    })
+    .catch(err => next(err));
+}

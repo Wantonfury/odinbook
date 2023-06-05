@@ -18,3 +18,7 @@ export const addMessage = (message, id) => {
 export const readMessages = (id, messages) => {
   return axios.post(`${SERVER}/chats/read_messages`, { id, messages });
 }
+
+export const getChatId = (id) => {
+  return axios.get(`${SERVER}/chats/get_chat_id?id=${id}`);
+}

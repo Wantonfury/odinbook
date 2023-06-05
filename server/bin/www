@@ -7,7 +7,7 @@
 var app = require('../app');
 var debug = require('debug')('server:server');
 var http = require('http');
-const { Server } = require('socket.io');
+const { setupIO } = require('../utils/SocketIO');
 
 /**
  * Get port from environment and store in Express.
@@ -34,16 +34,7 @@ server.on('listening', onListening);
 /**
  * Open up socket io connection and listen
  */
-const io = new Server(server, {
-  cors: {
-    origin: process.env.ORIGIN || 'http://localhost:3000',
-    methods: ['GET', 'POST']
-  }
-});
-
-io.on('connection', socket => {
-  console.log(`User connected ${socket.id}`);
-});
+setupIO(server);
 
 /**
  * Normalize a port into a number, string, or false.

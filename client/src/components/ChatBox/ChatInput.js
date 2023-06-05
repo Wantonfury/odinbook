@@ -1,14 +1,21 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { addMessage } from '../../apis/chatAPI';
+import SocketContext from "../../contexts/SocketContext";
+import ChatContext from "../../contexts/ChatContext";
 
-const ChatInput = ({ user }) => {
+const ChatInput = ({ chatId }) => {
   const [message, setMessage] = useState('');
+  const { socket } = useContext(SocketContext);
+  const { chatBoxId } = useContext(ChatContext);
   
   const handleSubmit = (e) => {
     e.preventDefault();
     
-    addMessage(message, user.chatbox)
-      .finally(() => setMessage(''));
+    addMessage(message, chatBoxId)
+      .finally(() => {
+        setMessage('');
+        socket.emit('send_message', { chat: chatId });
+      });
   }
   
   const handleChange = (e) => {

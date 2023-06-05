@@ -41,11 +41,17 @@ const HomePage = () => {
   
   return (
     <div id="homepage">
-      <Options options={options} setOption={setOption} />
-      <div className="middle">
+      <div className='homepage-left'>
+        <Options options={options} setOption={setOption} />
+      </div>
+      
+      <div className="homepage-middle">
         {handleOptions()}
       </div>
-      <Contacts update={updateContacts} />
+      
+      <div className="homepage-right">
+        <Contacts update={updateContacts} />
+      </div>
     </div>
   );
 }

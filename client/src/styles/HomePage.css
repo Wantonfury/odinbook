@@ -9,8 +9,19 @@
   min-height: calc(100vh - 40px); */
 }
 
-.middle {
+.homepage-middle {
   min-width: 400px;
   width: 800px;
   height: 100%;
+}
+
+.homepage-left {
+  width: 200px;
+  margin-left: auto;
+}
+
+.homepage-right {
+  width: 200px;
+  margin-right: auto;
+  margin-left: 50px;
 }

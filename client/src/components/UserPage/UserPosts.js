@@ -8,18 +8,18 @@ import UserContext from '../../contexts/UserContext';
 const UserPosts = (props) => {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
-  const { user } = useContext(UserContext);
+  const { userPageId } = useContext(UserContext);
   
   useEffect(() => {
-    if (!user.userPageId) return;
+    if (!userPageId) return;
     
-    getPostsUser(user.userPageId)
+    getPostsUser(userPageId)
       .then(res => 
         {
           setPosts(res.data ? res.data : []);
         })
       .finally(() => setLoading(false));
-  }, [loading, user.userPageId]);
+  }, [loading, userPageId]);
   
   return (
     <div className="posts posts-narrow">

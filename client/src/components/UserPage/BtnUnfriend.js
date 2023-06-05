@@ -1,6 +1,6 @@
 import '../../styles/Button.css';
 
-const BtnUnfriend = (props) => {
+const BtnUnfriend = ({ id }) => {
   return (
     <button type='button' className='btn'>Unfriend</button>
   );

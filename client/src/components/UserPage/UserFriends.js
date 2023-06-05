@@ -9,12 +9,12 @@ import UserContext from "../../contexts/UserContext";
 const UserFriends = (props) => {
   const [friends, setFriends] = useState([]);
   const [loading, setLoading] = useState(true);
-  const { user } = useContext(UserContext);
+  const { userPageId } = useContext(UserContext);
   
   useEffect(() => {
-    if (!user.userPageId) return;
+    if (!userPageId) return;
     
-    getFriendsUser(user.userPageId)
+    getFriendsUser(userPageId)
       .then(res => {
         setFriends(res.data ? res.data : []);
         
@@ -22,7 +22,7 @@ const UserFriends = (props) => {
         props.setFriendsCount(`${friendsCount} friend${friendsCount !== 1 ? 's' : ''}`);
       })
       .finally(() => setLoading(false));
-  }, [props, user.userPageId]);
+  }, [props, userPageId]);
   
   return (
     <div className="user-friends card">

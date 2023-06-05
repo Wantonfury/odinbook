@@ -42,3 +42,11 @@ export const addFriend = (id) => {
 export const getUser = (id) => {
   return axios.get(`${SERVER}/users/get_user?id=${id}`);
 }
+
+export const searchUsers = (search) => {
+  return axios.get(`${SERVER}/users/search_users`, { params: { search } });
+}
+
+export const changeName = (first_name, last_name) => {
+  return axios.post(`${SERVER}/users/change_name`, { first_name, last_name });
+}

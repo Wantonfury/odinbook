@@ -24,6 +24,10 @@
 .user-profile-picture,
 .user-profile-name {
   cursor: pointer;
+  
+  background: none !important;
+  border: none;
+  padding: 0 !important;
 }
 
 .user-profile-picture {
@@ -41,10 +45,10 @@
   transform: scale(1.05);
 }
 
-.user-profile-name {
-  font-weight: 500;
+.user-profile-name-span {
+  font-weight: 600 !important;
 }
 
-.user-profile-name:hover {
+.user-profile-name-span:hover {
   text-decoration: underline;
 }

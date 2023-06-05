@@ -77,7 +77,6 @@ exports.addMessage = [
 ]
 
 exports.readMessages = (req, res, next) => {
-  console.log(req.body);
   Chat.findOne({ $and: [
     { users: req.user._id },
     { users: req.body.id }
@@ -95,6 +94,17 @@ exports.readMessages = (req, res, next) => {
       chat.save()
         .then(() => res.status(200).send())
         .catch(err => next(err));
+    })
+    .catch(err => next(err));
+}
+
+exports.getChatId = (req, res, next) => {
+  Chat.findOne({ $and: [
+    { users: req.user._id },
+    { users: req.query.id }
+  ]})
+    .then(chat => {
+      res.status(200).json(chat?._id);
     })
     .catch(err => next(err));
 }

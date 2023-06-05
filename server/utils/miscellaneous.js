@@ -7,6 +7,7 @@ exports.generateUserData = (user) => {
     id: user._id,
     first_name: user.first_name,
     last_name: user.last_name,
+    full_name: user.full_name,
     pfp: null
   }
 }

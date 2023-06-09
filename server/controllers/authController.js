@@ -2,16 +2,18 @@ const User = require('../models/user');
 const validation = require('../utils/middleware').validation;
 const passport = require('passport');
 const cookieOpts = require('../utils/settings').cookieOpts;
+const { generateUserData } = require('../utils/miscellaneous');
 
-const generateUserData = (user) => {
-  return {
-    username: user.username,
-    first_name: user.first_name,
-    last_name: user.last_name,
-    pfp: null,
-    id: user._id
-  }
-}
+// const generateUserData = (user) => {
+//   return {
+//     username: user.username,
+//     first_name: user.first_name,
+//     last_name: user.last_name,
+//     full_name: user.full_name,
+//     pfp: user.pfp,
+//     id: user._id
+//   }
+// }
 
 exports.login = [
   validation,

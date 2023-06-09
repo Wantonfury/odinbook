@@ -4,7 +4,7 @@ import { useState, useContext } from "react";
 import { login } from "../apis/userAPI";
 import UserContext from '../contexts/UserContext';
 
-const LoginForm = () => {
+const LoginForm = ({ reload }) => {
   const { setUser } = useContext(UserContext);
   
   const [data, setData] = useState({
@@ -20,7 +20,8 @@ const LoginForm = () => {
         setUser({
           ...res.data,
           loggedIn: true
-        })
+        });
+        reload();
       })
       .catch(err => console.log(err));
     

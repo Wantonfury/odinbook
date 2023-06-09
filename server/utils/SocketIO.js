@@ -16,12 +16,12 @@ const init = () => {
       const { chat } = data;
       
       socket.leave(chat);
-    })
+    });
     
     socket.on('send_message', (data) => {
-      const { chat } = data;
+      const { chat, message } = data;
       
-      io.in(chat).emit('receive_message');
+      io.in(chat).emit('receive_message', message);
     });
   });
 }

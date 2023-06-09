@@ -26,6 +26,13 @@ const PostForm = (props) => {
     });
   }
   
+  const handleFile = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.files[0]
+    })
+  }
+  
   useEffect(() => {
     props.setMessage(formData.message);
   }, [props, formData]);
@@ -33,6 +40,11 @@ const PostForm = (props) => {
   return (
     <form className="form" onSubmit={handleSubmit}>
       <textarea rows="20" name="message" value={formData.message} onChange={handleChange} />
+      
+      <div className='form-cnt'>
+        <label htmlFor='photo'>Add photo: </label>
+        <input type='file' name='photo' accept='.png, .jpg, .jpeg, .svg, .webp' onChange={handleFile} />
+      </div>
       <button className="btn btn-wide" type="submit">Post</button>
     </form>
   );

@@ -12,9 +12,11 @@ const ChatInput = ({ chatId }) => {
     e.preventDefault();
     
     addMessage(message, chatBoxId)
+      .then(res => {
+        socket.emit('send_message', { chat: chatId, message: res.data });
+      })
       .finally(() => {
         setMessage('');
-        socket.emit('send_message', { chat: chatId });
       });
   }
   

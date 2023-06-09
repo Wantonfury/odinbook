@@ -9,6 +9,7 @@ const UserSchema = new Schema({
   last_name: { type: String, minLength: 2, required: true },
   full_name: { type: String },
   age: { type: Number, minValue: 13, required: true },
+  pfp: { type: String }
 });
 
 UserSchema.pre('save', function(next) {

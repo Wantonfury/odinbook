@@ -4,6 +4,7 @@ import HomeIcon from '../../assets/images/home.svg';
 import { useContext } from "react";
 import UserContext from '../../contexts/UserContext';
 import NavSearch from './NavSearch';
+import NavAccount from './NavAccount';
 
 const NavBar = () => {
   const { user, setUserPageId } = useContext(UserContext);
@@ -19,7 +20,7 @@ const NavBar = () => {
         <NavSearch />
       </div>
       
-      <UserProfilePicture id={user.id} />
+      <NavAccount user={user} />
     </div>
   );
 }

@@ -50,3 +50,7 @@ export const searchUsers = (search) => {
 export const changeName = (first_name, last_name) => {
   return axios.post(`${SERVER}/users/change_name`, { first_name, last_name });
 }
+
+export const logOut = () => {
+  return axios.post(`${SERVER}/auth/logout`);
+}

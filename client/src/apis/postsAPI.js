@@ -4,15 +4,15 @@ const SERVER = process.env.REACT_APP_SERVER;
 axios.defaults.withCredentials = true;
 
 export const post = (data) => {
-  return axios.post(`${SERVER}/posts/post`, data);
+  return axios.post(`${SERVER}/posts/post`, data, { headers: { "Content-Type": 'multipart/form-data' }});
 }
 
-export const getPosts = () => {
-  return axios.get(`${SERVER}/posts/get_posts_all`);
+export const getPosts = (fromDate = null) => {
+  return axios.get(`${SERVER}/posts/get_posts_all`, { params: { fromDate }});
 }
 
-export const getPostsUser = (id) => {
-  return axios.get(`${SERVER}/posts/get_posts_user?id=${id}`);
+export const getPostsUser = (id, fromDate = null) => {
+  return axios.get(`${SERVER}/posts/get_posts_user`, { params: { id, fromDate }});
 }
 
 export const getComments = (id) => {
@@ -25,4 +25,8 @@ export const addComment = (id, comment) => {
 
 export const addLike = (id) => {
   return axios.post(`${SERVER}/posts/like`, { id });
+}
+
+export const getCommentsCount = (id) => {
+  return axios.get(`${SERVER}/posts/get_comments_count`, { params: { id }});
 }

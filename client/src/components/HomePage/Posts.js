@@ -14,17 +14,44 @@ const Posts = () => {
   const { handleModal } = useContext(ModalContext);
   const [message, setMessage] = useState('')
   const [loading, setLoading] = useState(true);
+  const [postsLoaded, setPostsLoaded] = useState(false);
+  const [loadingMore, setLoadingMore] = useState(true);
   const [posts, setPosts] = useState([]);
+  
+  
+  
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.innerHeight + document.documentElement.scrollTop + 1 >= document.scrollingElement.scrollHeight) {
+        if (postsLoaded) return;
+        
+        setLoadingMore(true);
+        
+        getPosts(posts && posts.length > 0 ? posts[posts.length - 1].date : null)
+          .then(res => {
+            if (res.data && res.data.length === 0) setPostsLoaded(true);
+            setPosts(res.data ? posts.concat(res.data) : posts);
+          })
+          .finally(() => setLoadingMore(false));
+      }
+    }
+    
+    window.addEventListener('scroll', handleScroll);
+    
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, [posts, postsLoaded]);
   
   useEffect(() => {
     if (!loading) return;
     
-    getPosts()
-      .then(posts => {
-        setPosts(posts.data ? posts.data : []);
+    getPosts(posts && posts.length > 0 ? posts[posts.length - 1].date : null)
+      .then(res => {
+        setPosts(res.data ? res.data : []);
       })
       .finally(() => setLoading(false));
-  }, [loading]);
+  }, [loading, posts]);
   
   return (
     loading ? <LoadingIcon /> :
@@ -40,6 +67,10 @@ const Posts = () => {
               <Post key={index} post={post} />
             );
           })
+        }
+        
+        {
+          loadingMore ? <LoadingIcon /> : null
         }
       </div>
   );

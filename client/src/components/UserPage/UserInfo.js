@@ -6,6 +6,8 @@ import UserName from "../UserName";
 import BtnUnfriend from "./BtnUnfriend";
 import BtnMessage from "./BtnMessage";
 import UserContext from "../../contexts/UserContext";
+import BtnEditProfile from "./BtnEditProfile";
+import ButtonLogOut from "./BtnLogOut";
 
 const UserInfo = (props) => {
   const [userData, setUserData] = useState({});
@@ -25,7 +27,7 @@ const UserInfo = (props) => {
       {
         loading ? <LoadingIcon /> :
           <div className="user-page-info-user">
-            <UserProfilePicture large={true} />
+            <UserProfilePicture pfp={user.pfp} large={true} />
             
             <div className="user-page-info-user-cnt">
               <UserName full_name={`${userData.first_name} ${userData.last_name}`} />
@@ -34,13 +36,21 @@ const UserInfo = (props) => {
           </div>
       }
       
-      {
-        user.id === userData.id ? <div></div> :
-          <div className='user-page-info-options'>
-            <BtnUnfriend id={user.id} />
-            <BtnMessage id={user.id} />
-          </div>
-      }
+      
+      <div className='user-page-info-options'>
+        {
+          user.id === userData.id ?
+          <>
+            <BtnEditProfile />
+            <ButtonLogOut id={user.id} />
+          </> :
+            <>
+              <BtnUnfriend id={user.id} />
+              <BtnMessage id={user.id} />
+            </>
+        }
+      </div>
+      
     </div>
   );
 }

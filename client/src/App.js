@@ -41,7 +41,7 @@ function App() {
         setUser({ loggedIn: false });
       })
       .finally(() => setLoading(false));
-  }, []);
+  }, [loading]);
   
   // const handlePage = () => {
   //   if (user.userPageId) {
@@ -66,10 +66,10 @@ function App() {
               
               {
                 loading ? <LoadingIcon /> : 
-                  user.loggedIn ? currentPage : <LoginPage />
+                  user.loggedIn ? currentPage : <LoginPage reload={setLoading} />
               }
               
-              { chatBoxId ? <ChatBox /> : null }
+              { chatBoxId && user.loggedIn ? <ChatBox /> : null }
             </div>
           </ModalProvider>
         </ChatContext.Provider>

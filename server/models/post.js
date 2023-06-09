@@ -9,7 +9,8 @@ const PostSchema = new Schema({
   comments: [{
     user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
     comment: { type: String, minLength: 5, maxLength: 100, required: true }
-  }]
+  }],
+  photo: { type: String }
 });
 
 module.exports = mongoose.model('Post', PostSchema);

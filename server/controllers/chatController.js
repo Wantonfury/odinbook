@@ -5,11 +5,35 @@ const relativeTime = require('dayjs/plugin/relativeTime');
 dayjs.extend(relativeTime);
 
 exports.getMessages = (req, res, next) => {
-  Chat.findOne({ $and: [
-    { users: req.user._id },
-    { users: req.query.id }
-  ]}).populate('messages.user', 'messages.user first_name last_name')
+  Chat.findOne(
+    {
+      $and: [
+        { users: req.user._id },
+        { users: req.query.id }
+      ]
+    },
+    {
+      'messages': { $slice: req.query.limit ? -req.query.limit : -100 }
+    }
+  ).populate('messages.user', 'messages.user first_name last_name full_name pfp')
     .then(chat => {
+      res.status(200).json(!chat ? [] : chat.messages)
+    })
+    .catch(err => next(err));
+}
+
+exports.getMessagesUnread = (req, res, next) => {
+  Chat.findOne(
+    {
+      $and: [
+        { users: req.user._id },
+        { users: req.query.id }
+      ],
+      'messages.read': { $ne: [req.user._id] }
+    },
+  ).populate('messages.user', 'messages.user first_name last_name full_name pfp')
+    .then(chat => {
+      console.log(chat);
       res.status(200).json(!chat ? [] : chat.messages)
     })
     .catch(err => next(err));
@@ -56,7 +80,6 @@ exports.addMessage = [
       };
       
       if (chat) {
-        console.log(chat);
         chat.messages.push(message);
       } else {
         if (!chat) chat = new Chat({
@@ -65,10 +88,8 @@ exports.addMessage = [
         });
       }
       
-      
-      
       chat.save()
-        .then(() => res.status(200).send())
+        .then(() => res.status(200).json(message))
         .catch(err => next(err));
     } catch(err) {
       next(err);

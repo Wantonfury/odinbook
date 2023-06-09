@@ -8,7 +8,7 @@ exports.generateUserData = (user) => {
     first_name: user.first_name,
     last_name: user.last_name,
     full_name: user.full_name,
-    pfp: null
+    pfp: user.pfp
   }
 }
 
@@ -16,11 +16,13 @@ exports.generatePost = (post, id) => {
   return {
     id: post._id,
     message: post.message,
-    likes: post.likes,
+    likes: post.likes.length,
     liked: post.likes.indexOf(id) !== -1 ? true : false,
     posts: post.likes.length,
-    date: dayjs(post.date).fromNow(),
-    user: this.generateUserData(post.user)
+    date: post.date,
+    user: this.generateUserData(post.user),
+    photo: post.photo,
+    commentsCount: post.comments.length
   }
 }
 

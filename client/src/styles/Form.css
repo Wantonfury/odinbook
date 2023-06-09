@@ -38,3 +38,14 @@
 .form textarea:focus {
   outline-color: var(--btn-clr);
 }
+
+.form-cnt {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.form-cnt > :first-child {
+  margin-right: auto;
+  width: 50%;
+}

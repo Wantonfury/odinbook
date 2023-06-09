@@ -24,7 +24,7 @@ const Contacts = (props) => {
     
     return (
       friends.map((friend, index) => {
-        return <UserNameplate key={index} user={friend} />;
+        return <UserNameplate key={index} user={friend} pfp={friend.pfp} />;
       })
     );
   }

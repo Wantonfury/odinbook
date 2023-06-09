@@ -6,6 +6,12 @@
   gap: 20px;
 }
 
+.post {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
 .posts-narrow {
   width: 40%;
 }
@@ -48,6 +54,16 @@
   align-items: center;
 }
 
+.post-photo {
+  max-width: 100%;
+}
+
+.post-message {
+  display: flex;
+  text-align: left;
+  white-space: pre-line;
+}
+
 .liked {
   background-color: var(--btn-clr);
   color: #fffffe;
@@ -64,4 +80,30 @@
 
 .post-user-info span {
   font-size: 14px;
+}
+
+.post-details {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.post-likes {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.post-comments {
+  color: gray;
+  cursor: pointer;
+}
+
+.post-comments:hover {
+  text-decoration: underline;
+}
+
+.post-likes img {
+  width: 24px;
+  height: auto;
 }

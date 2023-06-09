@@ -1,18 +1,21 @@
 import LoadingIcon from "../LoadingIcon";
 import { useState, useEffect, useReducer, useContext } from "react";
-import { getMessages, readMessages } from "../../apis/chatAPI";
-import dayjs from "dayjs";
-import relativeTime from 'dayjs/plugin/relativeTime';
+import { getMessages, getMessagesUnread, readMessages } from "../../apis/chatAPI";
 import UserName from "../UserName";
 import UserProfilePicture from "../UserProfilePicture";
 import SocketContext from '../../contexts/SocketContext';
 import ChatContext from "../../contexts/ChatContext";
+import dayjs from "dayjs";
+import relativeTime from 'dayjs/plugin/relativeTime';
 dayjs.extend(relativeTime);
 
 const reducer = (state, action) => {
   switch (action.type) {
     case 'UPDATE':
       return action.messages;
+     case 'ADD':
+       //console.log(state[0][state[0].length - 1].user._id === action.message.user);
+       return state[0][state[0].length - 1].user._id === action.message.user._id ? [...state[0], action.message] : state ;
     default:
       return state;
   }
@@ -21,6 +24,7 @@ const reducer = (state, action) => {
 const ChatLog = ({ user, setUser }) => {
   const [messages, dispatch] = useReducer(reducer, []);
   const [loading, setLoading] = useState(true);
+  const [loadingMore, setLoadingMore] = useState(false);
   const { socket } = useContext(SocketContext);
   const { chatBoxId } = useContext(ChatContext);
   
@@ -32,10 +36,8 @@ const ChatLog = ({ user, setUser }) => {
         const data = !res.data ? [] : res.data.map(message => {
           return {
             ...message,
-            date: dayjs(message.date).fromNow(),
             user: {
-              ...message.user,
-              full_name: message.user.first_name + ' ' + message.user.last_name
+              ...message.user
             }
           }
         });
@@ -77,10 +79,21 @@ const ChatLog = ({ user, setUser }) => {
   }, [messages, setUser]);
   
   useEffect(() => {
-    socket.on('receive_message', () => {
-      setLoading(true);
+    socket.on('receive_message', (message) => {
+      //setLoadingMore(true);
+      //dispatch({ type: 'ADD', message });
     });
   }, [socket]);
+  
+  useEffect(() => {
+    if (!loadingMore) return;
+    
+    getMessagesUnread(chatBoxId, messages[0][messages[0].length - 1].date)
+      .then(res => {
+        console.log(res.data);
+      })
+      .finally(() => setLoadingMore(false));
+  }, [loadingMore, messages, chatBoxId]);
   
   return (
     <ul className="chatbox-log">
@@ -90,9 +103,9 @@ const ChatLog = ({ user, setUser }) => {
               return (
                 <li className="log-cnt" key={indexGroup}>
                   <div className="log-user">
-                    <UserProfilePicture id={messageGroup[0].user._id} />
+                    <UserProfilePicture id={messageGroup[0].user._id} pfp={messageGroup[0].user.pfp} />
                     <UserName id={messageGroup[0].user._id} full_name={messageGroup[0].user.full_name} />
-                    <p className="log-date">{ messageGroup[messageGroup.length - 1].date }</p>
+                    <p className="log-date">{ dayjs(messageGroup[messageGroup.length - 1].date).fromNow() }</p>
                   </div>
                   
                   {

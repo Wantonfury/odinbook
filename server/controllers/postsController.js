@@ -4,7 +4,7 @@ const { generatePost, generateComment } = require('../utils/miscellaneous');
 
 exports.get_posts_all = async (req, res, next) => {
   try {
-    const posts = (await Post.find().populate('user').sort({ 'date': -1 })).map(post => {
+    const posts = (await Post.find(req.query.fromDate ? { date: { $lt: req.query.fromDate }} : {}).populate('user').sort({ 'date': -1 }).limit(10)).map(post => {
       return generatePost(post, req.user._id);
     });
     
@@ -15,7 +15,7 @@ exports.get_posts_all = async (req, res, next) => {
 }
 
 exports.get_posts_user = (req, res, next) => {
-  Post.find({ user: req.query.id }).populate('user').sort({ 'date': -1 })
+  Post.find(req.query.fromDate ? { user: req.query.id, date: { $lt: req.query.fromDate } } : { user: req.query.id }).populate('user').sort({ 'date': -1 }).limit(10)
     .then(posts => res.status(200).json(posts?.map(post => generatePost(post, req.user._id))));
 }
 
@@ -24,6 +24,12 @@ exports.get_comments = (req, res, next) => {
     .then(post => {
       res.status(200).json(post.comments.map(comment => generateComment(comment)));
     })
+    .catch(err => next(err));
+}
+
+exports.get_comments_count = (req, res, next) => {
+  Post.findOne({ _id: req.query.id }).select('comments')
+    .then(post => res.status(200).json(post && post.comments ? post.comments.length : 0))
     .catch(err => next(err));
 }
 
@@ -76,11 +82,12 @@ exports.post = [
       user: req.user._id,
       date: Date.now(),
       likes: [],
-      comments: []
+      comments: [],
+      photo: req.file ? req.file.path : ''
     });
     
     post.save()
-      .then(post => res.status(200).json(post))
+      .then(post => res.status(200).json(generatePost(post)))
       .catch(err => next(err));
   }
 ]

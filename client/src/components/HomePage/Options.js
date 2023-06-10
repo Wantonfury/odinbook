@@ -1,11 +1,11 @@
 import '../../styles/Button.css';
 import '../../styles/Options.css';
 
-const Options = (props) => {
+const Options = ({ setOption, options }) => {
   return (
     <div id="options">
-      <button className='btn' type='button' onClick={() => props.setOption(props.options.recent)}>Recent</button>
-      <button className='btn' type='button' onClick={() => props.setOption(props.options.findFriends)}>Find Friends</button>
+      <button className='btn' type='button' onClick={() => setOption(options.recent)}>Recent</button>
+      <button className='btn' type='button' onClick={() => setOption(options.findFriends)}>Find Friends</button>
     </div>
   );
 }

@@ -56,7 +56,7 @@ const Posts = () => {
   return (
     loading ? <LoadingIcon /> :
       <div className="posts">
-        <div className="card post-input">
+        <div className="post card post-input">
           <input readOnly={true} type="text" placeholder={`What's on your mind, ${user.first_name}?`} value={message} onFocus={() => handleModal(<PostForm message={message} setMessage={setMessage} reload={setLoading} />)} />
           <img className="svg" src={ArrowRight} alt="Arrow Right" />
         </div>

@@ -43,14 +43,6 @@ function App() {
       .finally(() => setLoading(false));
   }, [loading]);
   
-  // const handlePage = () => {
-  //   if (user.userPageId) {
-  //     return <UserPage />;
-  //   }
-    
-  //   return <HomePage />;
-  // }
-  
   useEffect(() => {
     if (userPageId) setCurrentPage(<UserPage />);
     else setCurrentPage(<HomePage />);

@@ -19,7 +19,7 @@ exports.getMessages = (req, res, next) => {
     }
   ).populate('messages.user')
     .then(chat => {
-      const test = chat.messages.map(message => {
+      const test = chat?.messages.map(message => {
         return {
           message: message.message,
           read: message.read,

@@ -1,5 +1,7 @@
 const Chat = require('../models/chat');
+const User = require('../models/user');
 const { body, validationResult } = require('express-validator');
+const { generateUserData } = require('../utils/miscellaneous');
 const dayjs = require('dayjs');
 const relativeTime = require('dayjs/plugin/relativeTime');
 dayjs.extend(relativeTime);
@@ -15,9 +17,18 @@ exports.getMessages = (req, res, next) => {
     {
       'messages': { $slice: req.query.limit ? -req.query.limit : -100 }
     }
-  ).populate('messages.user', 'messages.user first_name last_name full_name pfp')
+  ).populate('messages.user')
     .then(chat => {
-      res.status(200).json(!chat ? [] : chat.messages)
+      const test = chat.messages.map(message => {
+        return {
+          message: message.message,
+          read: message.read,
+          date: message.date,
+          user: generateUserData(message.user)
+        }
+      });
+      
+      res.status(200).json(!chat ? [] : test)
     })
     .catch(err => next(err));
 }
@@ -89,7 +100,7 @@ exports.addMessage = [
       }
       
       chat.save()
-        .then(() => res.status(200).json(message))
+        .then(() => User.findOne({ _id: message.user }).then(user => res.status(200).json({ ...message, user: generateUserData(user) })))
         .catch(err => next(err));
     } catch(err) {
       next(err);

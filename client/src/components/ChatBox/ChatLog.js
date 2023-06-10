@@ -14,8 +14,8 @@ const reducer = (state, action) => {
     case 'UPDATE':
       return action.messages;
      case 'ADD':
-       //console.log(state[0][state[0].length - 1].user._id === action.message.user);
-       return state[0][state[0].length - 1].user._id === action.message.user._id ? [...state[0], action.message] : state ;
+       return state[0][0].user.id === action.message.user.id ? state.map((groupedMessages, index) => index === 0 ? [...groupedMessages, action.message] :
+        groupedMessages) : [[action.message]].concat(state);
     default:
       return state;
   }
@@ -33,23 +33,14 @@ const ChatLog = ({ user, setUser }) => {
     
     getMessages(chatBoxId)
       .then(res => {
-        const data = !res.data ? [] : res.data.map(message => {
-          return {
-            ...message,
-            user: {
-              ...message.user
-            }
-          }
-        });
-        
-        data.reverse();
+        const data = res.data.toReversed();
         
         let dataGrouped = [];
         
         for (let i = 0, arr = []; i < data.length; ++i) {
           arr.push(data[i]);
           
-          if (i < data.length - 1 && data[i].user._id === data[i + 1].user._id)
+          if (i < data.length - 1 && data[i].user.id === data[i + 1].user.id)
             continue;
           
           dataGrouped.push(arr.reverse());
@@ -63,11 +54,10 @@ const ChatLog = ({ user, setUser }) => {
   
   useEffect(() => {
     const messagesId = [];
-    
     for (let i = 0; i < messages.length; ++i) {
       for (let j = 0; j < messages[i].length; ++j) {
-        if (user.id !== messages[i][j].user._id && !messages[i][j].read.includes(user.id))
-          messagesId.push(messages[i][j]._id);
+        if (user.id !== messages[i][j].user.id && !messages[i][j].read.includes(user.id))
+          messagesId.push(messages[i][j].id);
       }
     }
     
@@ -79,10 +69,13 @@ const ChatLog = ({ user, setUser }) => {
   }, [messages, setUser]);
   
   useEffect(() => {
-    socket.on('receive_message', (message) => {
-      //setLoadingMore(true);
-      //dispatch({ type: 'ADD', message });
-    });
+    const eventListener = (message) => {
+      dispatch({ type: 'ADD', message });
+    }
+    
+    socket.on('receive_message', eventListener);
+    
+    return () => socket.off('receive_message', eventListener);
   }, [socket]);
   
   useEffect(() => {
@@ -101,18 +94,22 @@ const ChatLog = ({ user, setUser }) => {
           loading ? <LoadingIcon /> :
             messages.map((messageGroup, indexGroup) => {
               return (
-                <li className="log-cnt" key={indexGroup}>
-                  <div className="log-user">
-                    <UserProfilePicture id={messageGroup[0].user._id} pfp={messageGroup[0].user.pfp} />
-                    <UserName id={messageGroup[0].user._id} full_name={messageGroup[0].user.full_name} />
-                    <p className="log-date">{ dayjs(messageGroup[messageGroup.length - 1].date).fromNow() }</p>
-                  </div>
+                <li className={`log ${messageGroup[0].user.id === user.id ? 'current-user': ''}`} key={indexGroup}>
+                  { messageGroup[0].user.id === user.id ? null : <UserProfilePicture id={messageGroup[0].user.id} pfp={messageGroup[0].user.pfp} /> }
                   
-                  {
-                    messageGroup.map((message, index) => {
-                      return <span className="log-message" key={index}>{message.message}</span>
-                    })
-                  }
+                  <div className='log-cnt'>
+                    <div className='log-header'>
+                      { messageGroup[0].user.id === user.id ? null : <UserName id={messageGroup[0].user.id} full_name={messageGroup[0].user.full_name} /> }
+                      <p className="log-date">{ dayjs(messageGroup[messageGroup.length - 1].date).fromNow() }</p>
+                    </div>
+                    <div className={`log-content ${messageGroup[0].user.id === user.id ? 'current-user': ''}`}>
+                      {
+                        messageGroup.map((message, index) => {
+                          return <span className='log-message' key={index}>{message.message}</span>
+                        })
+                      }
+                    </div>
+                  </div>
                 </li>
               )
             })

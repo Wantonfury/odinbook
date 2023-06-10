@@ -25,8 +25,8 @@ const Post = ({ post }) => {
   }
   
   return (
-    <div className="card">
-      <div className='post'>
+    <div className="post card">
+      <div className='post-content'>
         <div className="post-user">
           <UserProfilePicture pfp={post.user.pfp} id={post.user.id} />
           
@@ -51,8 +51,8 @@ const Post = ({ post }) => {
       <hr />
       
       <div className="post-options">
-        <button className={"btn btn-transparent" + (post.liked ? ' liked' : '')} type="button" onClick={handleLike}>Like</button>
-        <button className="btn btn-transparent" type="button" onClick={handleComments}>Comment</button>
+        <button className={"btn btn-transparent btn-no-shadow" + (post.liked ? ' liked' : '')} type="button" onClick={handleLike}>Like</button>
+        <button className="btn btn-transparent btn-no-shadow" type="button" onClick={handleComments}>Comment</button>
       </div>
       
       {

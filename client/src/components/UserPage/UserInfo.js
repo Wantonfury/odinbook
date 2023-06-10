@@ -27,7 +27,7 @@ const UserInfo = (props) => {
       {
         loading ? <LoadingIcon /> :
           <div className="user-page-info-user">
-            <UserProfilePicture pfp={user.pfp} large={true} />
+            <UserProfilePicture pfp={props.pfp} large={true} />
             
             <div className="user-page-info-user-cnt">
               <UserName full_name={`${userData.first_name} ${userData.last_name}`} />
@@ -45,8 +45,8 @@ const UserInfo = (props) => {
             <ButtonLogOut id={user.id} />
           </> :
             <>
-              <BtnUnfriend id={user.id} />
-              <BtnMessage id={user.id} />
+              <BtnUnfriend id={userPageId} />
+              <BtnMessage id={userPageId} />
             </>
         }
       </div>

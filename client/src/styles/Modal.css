@@ -17,6 +17,7 @@
   padding-top: 30px;
   
   transform: translateX(-50%) translateY(-50%);
+  box-shadow: 2px 2px 3px rgba(128, 128, 128, 0.25);
 }
 
 #modal-close {

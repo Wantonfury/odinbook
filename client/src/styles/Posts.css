@@ -7,6 +7,10 @@
 }
 
 .post {
+  box-shadow: 4px 4px 5px rgba(128, 128, 128, 0.25);
+}
+
+.post-content {
   display: flex;
   flex-direction: column;
   gap: 10px;

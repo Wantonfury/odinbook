@@ -3,9 +3,10 @@ import { getNonFriends, addFriend, getPendingFriends } from '../../apis/userAPI'
 import '../../styles/User.css';
 import '../../styles/Button.css';
 import LoadingIcon from "../LoadingIcon";
-import DefaultProfileImage from '../../assets/images/account-default-image.svg';
 import '../../styles/FindFriends.css';
 import '../../styles/Card.css';
+import UserProfilePicture from "../UserProfilePicture";
+import UserName from "../UserName";
 
 const FindFriends = (props) => {
   const [users, setUsers] = useState([]);
@@ -46,8 +47,8 @@ const FindFriends = (props) => {
   const generateUserCard = (user, index, status) => {
     return (
       <div key={index} className="user-detailed">
-        <img src={user.pfp ? user.pfp : DefaultProfileImage} alt='Profile' />
-        <span>{user.first_name + ' ' + user.last_name}</span>
+        <UserProfilePicture large={true} pfp={user.pfp} />
+        <UserName full_name={user.full_name} />
         <button type="button" className="btn btn-wide" value={user.id} onClick={handleAdd}>{status}</button>
       </div>
     );

@@ -10,6 +10,8 @@
   
   cursor: pointer;
   transition: background-color .1s, color .1s;
+  
+  box-shadow: 2px 2px 3px rgba(128, 128, 128, 0.25);
 }
 
 .btn-wide {
@@ -39,4 +41,8 @@
 
 .btn-no-border {
   border: none;
+}
+
+.btn-no-shadow {
+  box-shadow: none;
 }

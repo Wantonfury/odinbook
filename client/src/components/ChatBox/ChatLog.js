@@ -11,7 +11,7 @@ dayjs.extend(relativeTime);
 
 const reducer = (state, action) => {
   switch (action.type) {
-    case 'UPDATE':
+    case 'SET':
       return action.messages;
      case 'ADD':
        return state[0][0].user.id === action.message.user.id ? state.map((groupedMessages, index) => index === 0 ? [...groupedMessages, action.message] :
@@ -47,7 +47,7 @@ const ChatLog = ({ user, setUser }) => {
           arr = [];
         }
         
-        dispatch({ type: 'UPDATE', messages: dataGrouped })
+        dispatch({ type: 'SET', messages: dataGrouped })
       })
       .finally(() => setLoading(false));
   }, [chatBoxId, loading]);

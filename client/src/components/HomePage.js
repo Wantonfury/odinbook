@@ -1,8 +1,6 @@
 import '../styles/Button.css';
 import '../styles/HomePage.css';
-import { logout } from '../apis/userAPI';
-import UserContext from '../contexts/UserContext';
-import { useState, useContext } from "react";
+import { useState } from "react";
 import Options from './HomePage/Options';
 import Posts from './HomePage/Posts';
 import Contacts from './HomePage/Contacts';

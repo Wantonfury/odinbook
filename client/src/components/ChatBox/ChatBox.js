@@ -12,7 +12,7 @@ import IconClose from '../../assets/images/close-circle.svg';
 import ChatContext from '../../contexts/ChatContext';
 
 const ChatBox = () => {
-  const { user, setUser } = useContext(UserContext);
+  const { user } = useContext(UserContext);
   const { chatBoxId, setChatBoxId } = useContext(ChatContext);
   const { socket } = useContext(SocketContext);
   const [chatId, setChatId] = useState(null);
@@ -28,11 +28,7 @@ const ChatBox = () => {
       });
   }, [chatBoxId, socket, chatId]);
   
-  const handleClose = (e) => {
-    // setUser({
-    //   ...user,
-    //   chatbox: null
-    // })
+  const handleClose = () => {
     setChatBoxId(null);
   }
   
@@ -43,7 +39,7 @@ const ChatBox = () => {
         height: 'auto',
         marginLeft: 'auto'
       }} />
-      <ChatLog user={user} setUser={setUser} />
+      <ChatLog user={user} />
       
       <ChatInput chatId={chatId} />
     </div>

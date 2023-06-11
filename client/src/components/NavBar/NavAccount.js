@@ -9,8 +9,13 @@ const NavAccount = ({ user }) => {
     setDisplayOptions(!displayOptions);
   }
   
+  const handleBlur = (e) => {
+    setDisplayOptions(false);
+    if (e.relatedTarget) e.relatedTarget.click();
+  }
+  
   return (
-    <div className='nav-account' onClick={handleClick}>
+    <div className='nav-account' onClick={handleClick} onBlur={handleBlur}>
       <UserProfilePicture pfp={user.pfp} />
       { displayOptions ? <NavAccountOptions /> : null}
     </div>

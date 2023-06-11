@@ -53,6 +53,13 @@ const Posts = () => {
       .finally(() => setLoading(false));
   }, [loading, posts]);
   
+  const updatePost = (index, update) => {
+    const updatedPosts = [...posts];
+    updatedPosts[index] = update;
+    
+    setPosts(updatedPosts);
+  }
+  
   return (
     loading ? <LoadingIcon /> :
       <div className="posts">
@@ -64,7 +71,7 @@ const Posts = () => {
         {
           posts.map((post, index) => {
             return (
-              <Post key={index} post={post} />
+              <Post key={index} post={post} updatePost={(update) => updatePost(index, update)} />
             );
           })
         }

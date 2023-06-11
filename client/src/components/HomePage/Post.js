@@ -1,4 +1,4 @@
-import { addLike, getCommentsCount } from "../../apis/postsAPI";
+import { addLike } from "../../apis/postsAPI";
 import Comments from "./Comments";
 import { useState } from "react";
 import UserProfilePicture from "../UserProfilePicture";
@@ -8,7 +8,7 @@ import dayjs from "dayjs";
 import relativeTime from 'dayjs/plugin/relativeTime';
 dayjs.extend(relativeTime);
 
-const Post = ({ post }) => {
+const Post = ({ post, updatePost }) => {
   const [showComments, setShowComments] = useState(false);
   
   const handleLike = (e) => {
@@ -17,6 +17,7 @@ const Post = ({ post }) => {
     addLike(post.id)
       .then(res => {
         res.data.liked ? e.target.classList.add('liked') : e.target.classList.remove('liked');
+        updatePost({ ...post, likes: res.data.likes });
       });
   }
 
@@ -56,7 +57,7 @@ const Post = ({ post }) => {
       </div>
       
       {
-        showComments ? <Comments id={post.id} /> : null
+        showComments ? <Comments id={post.id} updateCommentsCount={(commentsCount) => updatePost({ ...post, commentsCount })} /> : null
       }
     </div>
   );

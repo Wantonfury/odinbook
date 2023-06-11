@@ -34,9 +34,9 @@ exports.get_comments_count = (req, res, next) => {
 }
 
 exports.add_comment = [
-  body('comment', 'Comment must be between 3 and 100 characters.')
+  body('comment', 'Comment must be between 1 and 100 characters.')
     .trim()
-    .isLength({ min: 3, max: 100 })
+    .isLength({ min: 1, max: 100 })
     .escape(),
   (req, res, next) => {
     const errors = validationResult(req);
@@ -53,9 +53,10 @@ exports.add_comment = [
           user: req.user._id,
           comment: req.body.comment
         });
+        
         post.save()
           .then(() => {
-            res.status(200).send()
+            res.status(200).json(post.comments.length);
           })
           .catch(err => next(err));
       })
@@ -64,9 +65,9 @@ exports.add_comment = [
 ]
 
 exports.post = [
-  body('message', 'Message must be between 3 and 255 characters.')
+  body('message', 'Message must be between 1 and 255 characters.')
     .trim()
-    .isLength({ min: 3, max: 255 })
+    .isLength({ min: 1, max: 255 })
     .escape(),
   (req, res, next) => {
     const errors = validationResult(req);

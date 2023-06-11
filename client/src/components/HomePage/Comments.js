@@ -7,7 +7,7 @@ import { getComments, addComment } from '../../apis/postsAPI';
 import UserProfilePicture from '../UserProfilePicture';
 import UserName from '../UserName';
 
-const Comments = (props) => {
+const Comments = ({ id, updateCommentsCount }) => {
   const [comments, setComments] = useState([]);
   const [comment, setComment] = useState('');
   const [loading, setLoading] = useState(true);
@@ -15,21 +15,22 @@ const Comments = (props) => {
   useEffect(() => {
     if (!loading) return;
     
-    getComments(props.id)
+    getComments(id)
       .then(res => {
         setComments(res.data ? res.data : []);
       })
       .finally(() => setLoading(false));
-  }, [props, loading]);
+  }, [id, loading]);
   
   const handleSubmit = (e) => {
     e.preventDefault();
     
-    addComment(props.id, comment)
-      .then(() => {
+    addComment(id, comment)
+      .then(res => {
         setLoading(true);
-        console.log("response");
-      });
+        updateCommentsCount(res.data)
+      })
+      .finally(() => setComment(''));
   }
   
   const handleChange = (e) => {
@@ -61,7 +62,7 @@ const Comments = (props) => {
         }
         
         <form className="post-input" onSubmit={handleSubmit}>
-          <input type="text" placeholder='Write a comment...' defaultValue='' onChange={handleChange} />
+          <input type="text" placeholder='Write a comment...' value={comment} onChange={handleChange} />
           <button type='submit' className='btn-transparent btn-no-border'><img className="svg" src={ArrowRight} alt="Arrow Right" /></button>
         </form>
       </div>

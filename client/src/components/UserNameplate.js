@@ -7,42 +7,54 @@ import { getUnreadMessagesCount } from '../apis/chatAPI';
 
 const SERVER = process.env.REACT_APP_SERVER;
 
-const UserNameplate = (props) => {
-  const { user, setUser } = useContext(UserContext);
-  const { setChatBoxId } = useContext(ChatContext);
+const UserNameplate = ({ user }) => {
+  const { currentUser, setUser } = useContext(UserContext);
+  const { chatBoxId, setChatBoxId } = useContext(ChatContext);
   const [unreadMessages, setUnreadMessages] = useState();
   const [updateUnreadMessages, setUpdateUnreadMessages] = useState(false);
   
+  // useEffect(() => {
+  //   getUnreadMessagesCount(user.id)
+  //     .then(res => {
+  //       setUnreadMessages(res.data);
+  //       setUpdateUnreadMessages(false);
+  //     });
+  // }, [user, updateUnreadMessages]);
+  
+  // useEffect(() => {
+  //   if (currentUser.updateRead === user.id) {
+  //     setUpdateUnreadMessages(true);
+  //     setUser({
+  //       ...currentUser,
+  //       updateRead: false
+  //     })
+  //   }
+  // }, [currentUser.updateRead, user, setUser]);
+  
   useEffect(() => {
-    getUnreadMessagesCount(props.user.id)
+    getUnreadMessagesCount(user.id)
       .then(res => {
         setUnreadMessages(res.data);
-        setUpdateUnreadMessages(false);
       });
-  }, [props.user, updateUnreadMessages]);
+  }, [user]);
   
   useEffect(() => {
-    if (user.updateRead === props.user.id) {
-      setUpdateUnreadMessages(true);
-      setUser({
-        ...user,
-        updateRead: false
-      })
+    if (chatBoxId === user.id) {
+      getUnreadMessagesCount(user.id)
+        .then(res => {
+          setUnreadMessages(res.data);
+        });
     }
-  }, [user.updateRead, props.user, setUser]);
+  }, [chatBoxId, user.id]);
   
   const handleClick = () => {
-    // setUser({
-    //   ...user,
-    //   chatbox: props.user.id
-    // })
-    setChatBoxId(props.user.id);
+    setChatBoxId(user.id);
   }
   
   return (
     <div className={`contact ${unreadMessages > 0 ? 'contact-notification' : ''}`} onClick={handleClick}>
-      <img src={props.user.pfp && props.user.pfp.length > 0 ? `${SERVER}/${props.user.pfp}` : DefaultProfileImage} alt='Profile' />
-      <span>{ props.user.first_name + ' ' + props.user.last_name }</span>
+      <img src={user.pfp && user.pfp.length > 0 ? `${SERVER}/${user.pfp}` : DefaultProfileImage} alt='Profile' />
+      <span>{ user.first_name + ' ' + user.last_name }</span>
       <p style={{
         textAlign: 'right',
         margin: '0',

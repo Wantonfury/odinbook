@@ -19,33 +19,30 @@ exports.getMessages = (req, res, next) => {
     }
   ).populate('messages.user')
     .then(chat => {
-      const test = chat?.messages.map(message => {
+      if (!chat) return res.status(200).send();
+      
+      chat.messages = chat.messages.map(message => {
         return {
           message: message.message,
-          read: message.read,
+          read: message.read.includes(req.user._id) ? message.read : [...message.read, req.user._id],
           date: message.date,
-          user: generateUserData(message.user)
+          user: message.user
         }
       });
       
-      res.status(200).json(!chat ? [] : test)
-    })
-    .catch(err => next(err));
-}
-
-exports.getMessagesUnread = (req, res, next) => {
-  Chat.findOne(
-    {
-      $and: [
-        { users: req.user._id },
-        { users: req.query.id }
-      ],
-      'messages.read': { $ne: [req.user._id] }
-    },
-  ).populate('messages.user', 'messages.user first_name last_name full_name pfp')
-    .then(chat => {
-      console.log(chat);
-      res.status(200).json(!chat ? [] : chat.messages)
+      chat.save()
+        .then(chat => {
+          const test = chat?.messages.map(message => {
+            return {
+              message: message.message,
+              read: message.read.includes(req.user._id) ? message.read : [...message.read, req.user._id],
+              date: message.date,
+              user: generateUserData(message.user)
+            }
+          });
+          
+          res.status(200).json(!chat ? [] : test)
+        });
     })
     .catch(err => next(err));
 }
@@ -107,28 +104,6 @@ exports.addMessage = [
     }
   }
 ]
-
-exports.readMessages = (req, res, next) => {
-  Chat.findOne({ $and: [
-    { users: req.user._id },
-    { users: req.body.id }
-  ]})
-    .then(chat => {
-      if (!chat) return res.status(200).send();
-      
-      chat.messages = chat.messages.map(message => {
-        return {
-          ...message,
-          read: req.body.messages.includes(message._id.toString()) ? [...message.read, req.user._id] : message.read
-        }
-      });
-      
-      chat.save()
-        .then(() => res.status(200).send())
-        .catch(err => next(err));
-    })
-    .catch(err => next(err));
-}
 
 exports.getChatId = (req, res, next) => {
   Chat.findOne({ $and: [

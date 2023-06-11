@@ -1,6 +1,6 @@
 import LoadingIcon from "../LoadingIcon";
 import { useState, useEffect, useReducer, useContext } from "react";
-import { getMessages, getMessagesUnread, readMessages } from "../../apis/chatAPI";
+import { getMessages } from "../../apis/chatAPI";
 import UserName from "../UserName";
 import UserProfilePicture from "../UserProfilePicture";
 import SocketContext from '../../contexts/SocketContext';
@@ -21,7 +21,7 @@ const reducer = (state, action) => {
   }
 }
 
-const ChatLog = ({ user, setUser }) => {
+const ChatLog = ({ user }) => {
   const [messages, dispatch] = useReducer(reducer, []);
   const [loading, setLoading] = useState(true);
   const [loadingMore, setLoadingMore] = useState(false);
@@ -47,26 +47,10 @@ const ChatLog = ({ user, setUser }) => {
           arr = [];
         }
         
-        dispatch({ type: 'SET', messages: dataGrouped })
+        dispatch({ type: 'SET', messages: dataGrouped });
       })
       .finally(() => setLoading(false));
   }, [chatBoxId, loading]);
-  
-  useEffect(() => {
-    const messagesId = [];
-    for (let i = 0; i < messages.length; ++i) {
-      for (let j = 0; j < messages[i].length; ++j) {
-        if (user.id !== messages[i][j].user.id && !messages[i][j].read.includes(user.id))
-          messagesId.push(messages[i][j].id);
-      }
-    }
-    
-    readMessages(user.id, messagesId)
-      .then(() => setUser({
-        ...user,
-        updateRead: user.chatbox
-      }));
-  }, [messages, setUser]);
   
   useEffect(() => {
     const eventListener = (message) => {
@@ -81,7 +65,7 @@ const ChatLog = ({ user, setUser }) => {
   useEffect(() => {
     if (!loadingMore) return;
     
-    getMessagesUnread(chatBoxId, messages[0][messages[0].length - 1].date)
+    getMessages(chatBoxId, messages[messages.length - 1][0].date)
       .then(res => {
         console.log(res.data);
       })

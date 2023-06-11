@@ -14,19 +14,8 @@ const options = {
 }
 
 const HomePage = () => {
-  const { user, setUser } = useContext(UserContext);
   const [ option, setOption ] = useState(options.recent);
   const [ updateContacts, setUpdateContacts ] = useState(false);
-  
-  const handleLogout = () => {
-    logout()
-      .then(() => setUser({
-        loggedIn: false
-      }))
-      .catch(err => console.log(err));
-      
-    return true;
-  }
   
   const handleOptions = () => {
     switch (option) {

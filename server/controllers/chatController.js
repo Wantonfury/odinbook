@@ -11,12 +11,13 @@ exports.getMessages = (req, res, next) => {
     {
       $and: [
         { users: req.user._id },
-        { users: req.query.id }
+        { users: req.query.id },
+        //req.query.fromDate ? { 'messages.date': { $lt: req.query.fromDate } } : {}
       ]
     },
-    {
-      'messages': { $slice: req.query.limit ? -req.query.limit : -100 }
-    }
+    // {
+    //   'messages': { $slice: req.query.limit ? -req.query.limit : -100 }
+    // }
   ).populate('messages.user')
     .then(chat => {
       if (!chat) return res.status(200).send();
@@ -30,19 +31,19 @@ exports.getMessages = (req, res, next) => {
         }
       });
       
-      chat.save()
-        .then(chat => {
-          const test = chat?.messages.map(message => {
-            return {
-              message: message.message,
-              read: message.read.includes(req.user._id) ? message.read : [...message.read, req.user._id],
-              date: message.date,
-              user: generateUserData(message.user)
-            }
-          });
-          
-          res.status(200).json(!chat ? [] : test)
-        });
+      const result = chat.messages.filter((message, index) => (chat.messages.length - index <= (req.query.limit ? req.query.limit : 10)) && (req.query.fromDate ? message.date < req.query.fromDate : true) ? true : false).map(message => {
+        return {
+          message: message.message,
+          read: message.read,
+          date: message.date,
+          user: generateUserData(message.user)
+        }
+      });
+      
+      console.log(result.length);
+      res.status(200).json(!chat ? [] : result);
+      
+      chat.save();
     })
     .catch(err => next(err));
 }

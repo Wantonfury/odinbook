@@ -36,20 +36,14 @@ exports.getNonFriends = async (req, res, next) => {
 exports.getPendingFriends = (req, res, next) => {
   Friendship.find({ "friendship": req.user._id, "pending": true }).populate('friendship')
     .then(friendships => {
-      friendships.reduce(async (pending, friendship) => {
-        const user = friendship.friendship[0]._id == req.user._id ? friendship.friendship[1] : friendship.friendship[0];
-        
-        const pendingArr = await pending;
-        
-        const userData = generateUserData(user);
-        userData.pending = friendship.friendship[0]._id == req.user._id ? true : false
-        
-        pendingArr.push(userData);
-        
-        
-        return pendingArr;
-      }, [])
-        .then(pending => res.status(200).json(pending));
+      const pending = friendships.map(friendship => {
+        return {
+          ...generateUserData(friendship.friendship[0]._id == req.user._id ? friendship.friendship[1] : friendship.friendship[0]),
+          pending: friendship.friendship[0]._id == req.user._id ? true : false
+        };
+      });
+      
+      res.status(200).json(pending);
     });
 }
 
@@ -80,6 +74,15 @@ exports.addFriend = async (req, res, next) => {
   } catch(err) {
     next(err);
   }
+}
+
+exports.removeFriend = (req, res, next) => {
+  Friendship.findOneAndRemove({ $and: [
+    { friendship: req.user._id },
+    { friendship: req.body.id }
+  ], pending: false })
+    .then(() => res.status(200).send())
+    .catch(err => next(err));
 }
 
 exports.getFriends = async (req, res, next) => {

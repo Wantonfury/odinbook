@@ -15,12 +15,8 @@ const reducer = (state, action) => {
     case 'SET':
       return action.messages;
     case 'ADD':
+      if (state.length === 0) return [[action.message]];
       return state[0][0].user.id === action.message.user.id ? state.map((groupedMessages, index) => index === 0 ? [...groupedMessages, action.message] : groupedMessages) : [[action.message]].concat(state);
-    case 'PREPEND':
-      console.log('messages prepend');
-      console.log(action.messages);
-      console.log(state[state.length - 1][0].user.id === action.messages[action.messages.length - 1][0].user.id ? [action.messages, ...state] : [action.messages, ...state]);
-      return state;
     default:
       return state;
   }
@@ -30,7 +26,7 @@ const reducer = (state, action) => {
 */
 
 const groupData = (dataToGroup) => {
-  const data = dataToGroup.toReversed();
+  const data = dataToGroup; //dataToGroup.toReversed();
   
   let dataGrouped = [];
   
@@ -49,6 +45,7 @@ const groupData = (dataToGroup) => {
 
 const ChatLog = () => {
   const [messages, dispatch] = useReducer(reducer, []);
+  const [messagesCount, setMessagesCount] = useState(0);
   const [loading, setLoading] = useState(true);
   const [scrollLoading, setScrollLoading] = useState(false);
   const [finishedLoading, setFinishedLoading] = useState(false);
@@ -57,15 +54,16 @@ const ChatLog = () => {
   const { chatBoxId } = useContext(ChatContext);
   const { user } = useContext(UserContext);
   
-  /*
-  * This useEffect loads the initial 100 most recent messages
-  */
+  /**
+   * This useEffect loads the initial 100 most recent messages
+   */
  
   useEffect(() => {
     if (!chatBoxId) return;
     
     getMessages(chatBoxId)
       .then(res => {
+        setMessagesCount(res.data.length);
         const dataGrouped = groupData(res.data);
         
         dispatch({ type: 'SET', messages: dataGrouped });
@@ -74,25 +72,27 @@ const ChatLog = () => {
   }, [loading, chatBoxId]);
   
   
-  /*
-  * This useEffect handles the adding of new messages received from the other user
-  * The message also gets added to the database, but we use socket io to circumvent database calls
-  */
+  /**
+   * 
+   * This useEffect handles the adding of new messages received from the other user
+   * The message also gets added to the database, but we use socket io to circumvent database calls
+   */
   
   useEffect(() => {
     const eventListener = (message) => {
+      setMessagesCount(messagesCount + 1);
       dispatch({ type: 'ADD', message });
     }
     
     socket.on('receive_message', eventListener);
     
     return () => socket.off('receive_message', eventListener);
-  }, [socket]);
+  }, [socket, messagesCount]);
   
   
-  /*
-  * This useEffect handles the loading of previous messages once the user scrolls to the top of the chat window
-  */
+  /**
+   * This useEffect handles the loading of previous messages once the user scrolls to the top of the chat window
+   */
  
   useEffect(() => {
     const chatWindow = document.querySelector('.chatbox-log');
@@ -104,12 +104,14 @@ const ChatLog = () => {
         setScrollLoading(true);
         setScrollReachedTop(true);
         
-        console.log(messages[messages.length - 1][0]);
-        getMessages(chatBoxId, messages[messages.length - 1][0].date)
+        getMessages(chatBoxId, messagesCount + 10)
           .then(res => {
-            if (!res.data || res.data.length === 0 || res.data === {}) setFinishedLoading(true);
-            
-            if (res.data && res.data.length > 0) dispatch({ type: 'PREPEND', messages: groupData(res.data) });
+            if (res.data && res.data.length > 0) {
+              if (res.data.length === messagesCount) setFinishedLoading(true);
+              
+              setMessagesCount(res.data.length);
+              dispatch({ type: 'SET', messages: groupData(res.data) });
+            }
           })
           .finally(() => setScrollLoading(false));
       } else if (scrollReachedTop && chatWindow.clientHeight + (-chatWindow.scrollTop) + 1 <= chatWindow.scrollHeight) setScrollReachedTop(false);
@@ -120,35 +122,40 @@ const ChatLog = () => {
     return () => {
       chatWindow.removeEventListener('scroll', handleScroll);
     };
-  }, [finishedLoading, messages, scrollReachedTop, chatBoxId]);
+  }, [finishedLoading, messages, scrollReachedTop, chatBoxId, messagesCount]);
   
   return (
     <ul className="chatbox-log">
         {
           loading ? <LoadingIcon /> :
-            messages.map((messageGroup, indexGroup) => {
-              return (
-                <li className={`log ${messageGroup[0].user.id === user.id ? 'current-user': ''}`} key={indexGroup}>
-                  { messageGroup[0].user.id === user.id ? null : <UserProfilePicture id={messageGroup[0].user.id} pfp={messageGroup[0].user.pfp} /> }
-                  
-                  <div className='log-cnt'>
-                    <div className='log-header'>
-                      { messageGroup[0].user.id === user.id ? null : <UserName id={messageGroup[0].user.id} full_name={messageGroup[0].user.full_name} /> }
-                      <p className="log-date">{ dayjs(messageGroup[messageGroup.length - 1].date).fromNow() }</p>
-                    </div>
-                    
-                    <div className={`log-content ${messageGroup[0].user.id === user.id ? 'current-user': ''}`}>
-                      { scrollLoading ? <LoadingIcon /> : null }
-                      {
-                        messageGroup.map((message, index) => {
-                          return <span className='log-message' key={index}>{message.message}</span>
-                        })
-                      }
-                    </div>
-                  </div>
-                </li>
-              )
-            })
+            <>
+              {
+                messages.map((messageGroup, indexGroup) => {
+                  return (
+                    <li className={`log ${messageGroup[0].user.id === user.id ? 'current-user': ''}`} key={indexGroup}>
+                      { messageGroup[0].user.id === user.id ? null : <UserProfilePicture id={messageGroup[0].user.id} pfp={messageGroup[0].user.pfp} /> }
+                      
+                      <div className='log-cnt'>
+                        <div className='log-header'>
+                          { messageGroup[0].user.id === user.id ? null : <UserName id={messageGroup[0].user.id} full_name={messageGroup[0].user.full_name} /> }
+                          <p className="log-date">{ dayjs(messageGroup[messageGroup.length - 1].date).fromNow() }</p>
+                        </div>
+                        
+                        <div className={`log-content ${messageGroup[0].user.id === user.id ? 'current-user': ''}`}>
+                          {
+                            messageGroup.map((message, index) => {
+                              return <span className='log-message' key={index}>{message.message}</span>
+                            })
+                          }
+                        </div>
+                      </div>
+                    </li>
+                  )
+                })
+              }
+              
+              { scrollLoading ? <LoadingIcon /> : null }
+            </>
         }
       </ul>
   );

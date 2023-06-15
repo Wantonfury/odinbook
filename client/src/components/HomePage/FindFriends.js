@@ -47,8 +47,8 @@ const FindFriends = (props) => {
   const generateUserCard = (user, index, status) => {
     return (
       <div key={index} className="user-detailed">
-        <UserProfilePicture large={true} pfp={user.pfp} />
-        <UserName full_name={user.full_name} />
+        <UserProfilePicture id={user.id} large={true} pfp={user.pfp} />
+        <UserName id={user.id} full_name={user.full_name} />
         { status === 'Pending' ? <button type='button' className='btn btn-wide'>{status}</button> : <button type="button" className="btn btn-wide" value={user.id} onClick={handleAdd}>{status}</button> }
       </div>
     );

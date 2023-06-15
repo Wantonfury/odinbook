@@ -85,6 +85,18 @@ exports.removeFriend = (req, res, next) => {
     .catch(err => next(err));
 }
 
+exports.checkFriend = (req, res, next) => {
+  Friendship.findOne({ $and: [
+    { friendship: req.user._id },
+    { friendship: req.query.id }
+  ]})
+    .then(friendship => res.status(200).json({
+      friend: friendship ? true : false,
+      pending: friendship ? friendship.pending : false
+    }))
+    .catch(err => next(err));
+}
+
 exports.getFriends = async (req, res, next) => {
   try {
     const friends = (await Friendship.find({ "friendship": req.user._id, "pending": false }).populate('friendship')).map(friendship => {

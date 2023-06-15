@@ -4,9 +4,10 @@ import { getMessages } from "../../apis/chatAPI";
 import UserName from "../UserName";
 import UserProfilePicture from "../UserProfilePicture";
 import SocketContext from '../../contexts/SocketContext';
-import ChatContext from "../../contexts/ChatContext";
 import dayjs from "dayjs";
 import relativeTime from 'dayjs/plugin/relativeTime';
+import ChatContext from "../../contexts/ChatContext";
+import UserContext from "../../contexts/UserContext";
 dayjs.extend(relativeTime);
 
 const reducer = (state, action) => {
@@ -46,7 +47,7 @@ const groupData = (dataToGroup) => {
   return dataGrouped;
 }
 
-const ChatLog = ({ user }) => {
+const ChatLog = () => {
   const [messages, dispatch] = useReducer(reducer, []);
   const [loading, setLoading] = useState(true);
   const [scrollLoading, setScrollLoading] = useState(false);
@@ -54,6 +55,7 @@ const ChatLog = ({ user }) => {
   const [scrollReachedTop, setScrollReachedTop] = useState(false);
   const { socket } = useContext(SocketContext);
   const { chatBoxId } = useContext(ChatContext);
+  const { user } = useContext(UserContext);
   
   /*
   * This useEffect loads the initial 100 most recent messages
@@ -69,7 +71,7 @@ const ChatLog = ({ user }) => {
         dispatch({ type: 'SET', messages: dataGrouped });
       })
       .finally(() => setLoading(false));
-  }, [chatBoxId, loading]);
+  }, [loading, chatBoxId]);
   
   
   /*
@@ -118,7 +120,7 @@ const ChatLog = ({ user }) => {
     return () => {
       chatWindow.removeEventListener('scroll', handleScroll);
     };
-  }, [chatBoxId, finishedLoading, messages, scrollReachedTop]);
+  }, [finishedLoading, messages, scrollReachedTop, chatBoxId]);
   
   return (
     <ul className="chatbox-log">
@@ -134,6 +136,7 @@ const ChatLog = ({ user }) => {
                       { messageGroup[0].user.id === user.id ? null : <UserName id={messageGroup[0].user.id} full_name={messageGroup[0].user.full_name} /> }
                       <p className="log-date">{ dayjs(messageGroup[messageGroup.length - 1].date).fromNow() }</p>
                     </div>
+                    
                     <div className={`log-content ${messageGroup[0].user.id === user.id ? 'current-user': ''}`}>
                       { scrollLoading ? <LoadingIcon /> : null }
                       {

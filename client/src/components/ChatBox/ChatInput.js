@@ -3,7 +3,7 @@ import { addMessage } from '../../apis/chatAPI';
 import SocketContext from "../../contexts/SocketContext";
 import ChatContext from "../../contexts/ChatContext";
 
-const ChatInput = ({ chatId }) => {
+const ChatInput = () => {
   const [message, setMessage] = useState('');
   const { socket } = useContext(SocketContext);
   const { chatBoxId } = useContext(ChatContext);
@@ -11,9 +11,9 @@ const ChatInput = ({ chatId }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     
-    addMessage(message, chatBoxId)
+    addMessage(chatBoxId, message)
       .then(res => {
-        socket.emit('send_message', { chat: chatId, message: res.data });
+        socket.emit('send_message', { chat: chatBoxId, message: res.data });
       })
       .finally(() => {
         setMessage('');

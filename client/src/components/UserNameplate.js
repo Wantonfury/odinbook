@@ -1,60 +1,68 @@
 import DefaultProfileImage from '../assets/images/account-default-image.svg';
 import '../styles/Contacts.css';
 import { useContext, useEffect, useState } from "react";
-import UserContext from '../contexts/UserContext';
 import ChatContext from '../contexts/ChatContext';
-import { getUnreadMessagesCount } from '../apis/chatAPI';
+import { getUnreadMessagesCount, getChatId } from '../apis/chatAPI';
+import SocketContext from '../contexts/SocketContext';
+import UserContext from '../contexts/UserContext';
 
 const SERVER = process.env.REACT_APP_SERVER;
 
-const UserNameplate = ({ user }) => {
-  const { currentUser, setUser } = useContext(UserContext);
+const UserNameplate = ({ nameplateUser }) => {
+  const { user } = useContext(UserContext);
   const { chatBoxId, setChatBoxId } = useContext(ChatContext);
+  const { socket } = useContext(SocketContext);
+  const [chatId, setChatId] = useState(null);
   const [unreadMessages, setUnreadMessages] = useState();
-  const [updateUnreadMessages, setUpdateUnreadMessages] = useState(false);
-  
-  // useEffect(() => {
-  //   getUnreadMessagesCount(user.id)
-  //     .then(res => {
-  //       setUnreadMessages(res.data);
-  //       setUpdateUnreadMessages(false);
-  //     });
-  // }, [user, updateUnreadMessages]);
-  
-  // useEffect(() => {
-  //   if (currentUser.updateRead === user.id) {
-  //     setUpdateUnreadMessages(true);
-  //     setUser({
-  //       ...currentUser,
-  //       updateRead: false
-  //     })
-  //   }
-  // }, [currentUser.updateRead, user, setUser]);
   
   useEffect(() => {
-    getUnreadMessagesCount(user.id)
+    getChatId([ nameplateUser.id ])
       .then(res => {
-        setUnreadMessages(res.data);
+        setChatId(res.data);
+        
+        getUnreadMessagesCount(res.data)
+          .then(res => setUnreadMessages(res.data));
       });
-  }, [user]);
+  }, [nameplateUser.id, socket]);
   
   useEffect(() => {
-    if (chatBoxId === user.id) {
-      getUnreadMessagesCount(user.id)
-        .then(res => {
-          setUnreadMessages(res.data);
-        });
+    if (!chatId) return;
+    
+    socket.emit('join_notifications', { chat: chatId });
+    
+    const eventRead = (chat) => {
+      if (chat === chatId) {
+        getUnreadMessagesCount(chatId)
+          .then(res => setUnreadMessages(res.data));
+      }
     }
-  }, [chatBoxId, user.id]);
+    
+    const eventNotification = (data) => {
+      const { chat, to } = data;
+      
+      if (chat === chatId && chat !== chatBoxId && to.includes(user.id)) {
+        setUnreadMessages(unreadMessages + 1);
+      }
+    }
+    
+    socket.on('messages_read', eventRead);
+    socket.on('message_new', eventNotification);
+    
+    return () => {
+      socket.off('messages_read', eventRead);
+      socket.off('message_new', eventNotification);
+      socket.emit('leave_notifications', { chat: chatId });
+    }
+  }, [socket, chatId, user.id, unreadMessages, chatBoxId]);
   
   const handleClick = () => {
-    setChatBoxId(user.id);
+    setChatBoxId(chatId);
   }
   
   return (
     <div className={`contact ${unreadMessages > 0 ? 'contact-notification' : ''}`} onClick={handleClick}>
-      <img src={user.pfp && user.pfp.length > 0 ? `${SERVER}/${user.pfp}` : DefaultProfileImage} alt='Profile' />
-      <span>{ user.first_name + ' ' + user.last_name }</span>
+      <img src={nameplateUser.pfp && nameplateUser.pfp.length > 0 ? `${SERVER}/${nameplateUser.pfp}` : DefaultProfileImage} alt='Profile' />
+      <span>{ nameplateUser.first_name + ' ' + nameplateUser.last_name }</span>
       <p style={{
         textAlign: 'right',
         margin: '0',

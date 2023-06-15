@@ -27,7 +27,7 @@ const UserInfo = (props) => {
       {
         loading ? <LoadingIcon /> :
           <div className="user-page-info-user">
-            <UserProfilePicture pfp={props.pfp} large={true} />
+            <UserProfilePicture pfp={userData.pfp} large={true} />
             
             <div className="user-page-info-user-cnt">
               <UserName full_name={`${userData.first_name} ${userData.last_name}`} />

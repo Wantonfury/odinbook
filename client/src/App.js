@@ -4,7 +4,7 @@ import LoginPage from './components/LoginPage';
 import UserContext from './contexts/UserContext';
 import SocketContext from './contexts/SocketContext';
 import { useState, useEffect } from "react";
-import HomePage from './components/HomePage';
+import HomePage from './components/HomePage/HomePage';
 import LoadingIcon from './components/LoadingIcon';
 import { checkLogin } from './apis/userAPI';
 import { ModalProvider } from './contexts/ModalContext';

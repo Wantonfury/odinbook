@@ -1,14 +1,16 @@
-import '../styles/Button.css';
-import '../styles/HomePage.css';
+import '../../styles/Button.css';
+import '../../styles/HomePage.css';
 import { useState } from "react";
-import Options from './HomePage/Options';
-import Posts from './HomePage/Posts';
-import Contacts from './HomePage/Contacts';
-import FindFriends from './HomePage/FindFriends';
+import Options from './Options';
+import Posts from './Posts';
+import Contacts from './Contacts';
+import FindFriends from './FindFriends';
+import Friends from './Friends';
 
 const options = {
   recent: 0,
-  findFriends: 1
+  friends: 1,
+  findFriends: 2
 }
 
 const HomePage = () => {
@@ -19,6 +21,8 @@ const HomePage = () => {
     switch (option) {
       case options.recent:
         return <Posts />
+      case options.friends:
+        return <Friends />
       case options.findFriends:
         return <FindFriends updateContacts={setUpdateContacts} />
       default:

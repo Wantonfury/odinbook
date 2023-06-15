@@ -3,8 +3,8 @@ const SERVER = process.env.REACT_APP_SERVER;
 
 axios.defaults.withCredentials = true;
 
-export const getMessages = (id, fromDate = null) => {
-  return axios.get(`${SERVER}/messages/get_messages`, { params: { id, fromDate }});
+export const getMessages = (id, limit = 20) => {
+  return axios.get(`${SERVER}/messages/get_messages`, { params: { id, limit }});
 }
 
 export const getUnreadMessagesCount = (id) => {

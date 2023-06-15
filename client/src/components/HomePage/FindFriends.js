@@ -37,7 +37,7 @@ const FindFriends = (props) => {
   
   const handleAdd = (e) => {
     addFriend(e.target.value)
-      .then(res => {
+      .then(() => {
         setLoading(true);
         props.updateContacts(true);
       })
@@ -49,7 +49,7 @@ const FindFriends = (props) => {
       <div key={index} className="user-detailed">
         <UserProfilePicture large={true} pfp={user.pfp} />
         <UserName full_name={user.full_name} />
-        <button type="button" className="btn btn-wide" value={user.id} onClick={handleAdd}>{status}</button>
+        { status === 'Pending' ? <button type='button' className='btn btn-wide'>{status}</button> : <button type="button" className="btn btn-wide" value={user.id} onClick={handleAdd}>{status}</button> }
       </div>
     );
   }
@@ -61,7 +61,7 @@ const FindFriends = (props) => {
     
     return (
       nonFriends.length > 0 ? (
-        <div className="card">
+        <div className="card find-friends-cnt">
           <p className="card-title">Recommended new friends:</p>
           { nonFriends }
         </div>
@@ -74,7 +74,7 @@ const FindFriends = (props) => {
     
     const listConfirm = pendingFriends.filter(user => user.pending !== true).map((user, index) => generateUserCard(user, index, 'Confirm'));
     const confirmFriendships = listConfirm.length > 0 ? (
-      <div className="card">
+      <div className="card find-friends-cnt">
         <p className="card-title">Confirm friendships:</p>
         { listConfirm }
       </div>
@@ -88,7 +88,7 @@ const FindFriends = (props) => {
     
     const listPending = pendingFriends.filter(user => user.pending === true).map((user, index) => generateUserCard(user, index, 'Pending'));
     const pendingFriendships = listPending.length > 0 ? (
-      <div className="card">
+      <div className="card find-friends-cnt">
         <p className="card-title">Pending friendships:</p>
         { listPending }
       </div>

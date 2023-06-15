@@ -35,6 +35,10 @@ export const getFriendsUser = (id) => {
   return axios.get(`${SERVER}/users/get_friends_user?id=${id}`)
 }
 
+export const checkFriend = (id) => {
+  return axios.get(`${SERVER}/users/check_friend`, { params: { id } });
+}
+
 export const addFriend = (id) => {
   return axios.post(`${SERVER}/users/add_friend`, { id });
 }

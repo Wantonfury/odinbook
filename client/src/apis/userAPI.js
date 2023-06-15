@@ -39,6 +39,10 @@ export const addFriend = (id) => {
   return axios.post(`${SERVER}/users/add_friend`, { id });
 }
 
+export const removeFriend = (id) => {
+  return axios.post(`${SERVER}/users/remove_friend`, { id });
+}
+
 export const getUser = (id) => {
   return axios.get(`${SERVER}/users/get_user?id=${id}`);
 }

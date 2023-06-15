@@ -1,16 +1,19 @@
 import '../../styles/Comments.css';
 import '../../styles/Button.css';
 import ArrowRight from '../../assets/images/arrow-right.svg';
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import LoadingIcon from '../LoadingIcon';
 import { getComments, addComment } from '../../apis/postsAPI';
 import UserProfilePicture from '../UserProfilePicture';
 import UserName from '../UserName';
+import { ModalContext } from '../../contexts/ModalContext';
+import ErrorModal from '../ErrorModal';
 
 const Comments = ({ id, updateCommentsCount }) => {
   const [comments, setComments] = useState([]);
   const [comment, setComment] = useState('');
   const [loading, setLoading] = useState(true);
+  const { handleModal } = useContext(ModalContext);
   
   useEffect(() => {
     if (!loading) return;
@@ -30,6 +33,7 @@ const Comments = ({ id, updateCommentsCount }) => {
         setLoading(true);
         updateCommentsCount(res.data)
       })
+      .catch(err => handleModal(<ErrorModal errors={err.response.data.errors } />))
       .finally(() => setComment(''));
   }
   

@@ -15,7 +15,7 @@ const createChat = async (user, users) => {
   return chat;
 }
 
-exports.getMessages = (req, res, next) => {
+exports.getMessages = async (req, res, next) => {
   Message.find({ chat: req.query.id }).sort({ date: -1 }).limit(req.query.limit ? -req.query.limit : -100).populate('sender')
     .then(messages => {
       const result = messages?.map(message => {
@@ -27,7 +27,7 @@ exports.getMessages = (req, res, next) => {
       });
       
       if (messages.length > 0) {
-        Message.updateMany({ date: { $gte: messages[0].date, $lte: messages[messages.length - 1].date } }, { $addToSet: { read: req.user._id } }, { multi: true, upsert: true })
+        Message.updateMany({ chat: req.query.id }, { $addToSet: { read: req.user._id } }, { multi: true, upsert: true })
           .then(() => emit(req.query.id, 'messages_read', req.query.id));
       }
       

@@ -1,5 +1,5 @@
 import { useState, useEffect, useContext } from "react";
-import { getUser } from '../../apis/userAPI';
+import { getUser, checkFriend } from '../../apis/userAPI';
 import LoadingIcon from "../LoadingIcon";
 import UserProfilePicture from "../UserProfilePicture";
 import UserName from "../UserName";
@@ -8,17 +8,25 @@ import BtnMessage from "./BtnMessage";
 import UserContext from "../../contexts/UserContext";
 import BtnEditProfile from "./BtnEditProfile";
 import ButtonLogOut from "./BtnLogOut";
+import BtnAddFriend from "./BtnAddFriend";
 
 const UserInfo = (props) => {
   const [userData, setUserData] = useState({});
+  const [friendData, setFriendData] = useState(false);
   const [loading, setLoading] = useState(true);
   const { user, userPageId } = useContext(UserContext);
   
   useEffect(() => {
     if (!userPageId) return;
     
-    getUser(userPageId)
-      .then(res => setUserData(res.data ? { ...res.data } : {}))
+    Promise.all([
+      getUser(userPageId)
+        .then(res => {
+          setUserData(res.data ? { ...res.data } : {});
+        }),
+      checkFriend(userPageId)
+        .then(res => setFriendData(res.data))
+    ])
       .finally(() => setLoading(false));
   }, [loading, userPageId]);
   
@@ -45,8 +53,17 @@ const UserInfo = (props) => {
             <ButtonLogOut id={user.id} />
           </> :
             <>
-              <BtnUnfriend id={userPageId} />
-              <BtnMessage id={userPageId} />
+              { friendData.friend && !friendData.pending ? 
+                <>
+                  <BtnUnfriend id={userPageId} />
+                  <BtnMessage id={userPageId} />
+                </>
+                :
+                <>
+                  { friendData.friend && friendData.pending ? <button type='button' className='btn btn-wide'>Pending</button> : <BtnAddFriend id={userPageId} update={() => setFriendData({ friend: true, pending: true })} /> }
+                </>
+              }
+              
             </>
         }
       </div>

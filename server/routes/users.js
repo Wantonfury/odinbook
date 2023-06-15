@@ -8,6 +8,7 @@ router.get('/search_users', userController.searchUsers);
 router.get('/get_friends', userController.getFriends);
 router.get('/get_friends_user', userController.getFriendsUser);
 router.get('/get_user', userController.getUser);
+router.get('/check_friend', userController.checkFriend);
 
 router.post('/add_friend', userController.addFriend);
 router.post('/remove_friend', userController.removeFriend);

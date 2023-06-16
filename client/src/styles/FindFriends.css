@@ -7,6 +7,12 @@
 
 .find-friends-cnt {
   display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.find-friends-list {
+  display: flex;
   flex-wrap: wrap;
-  gap: 40px;
+  gap: 20px;
 }

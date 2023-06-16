@@ -63,7 +63,9 @@ const FindFriends = (props) => {
       nonFriends.length > 0 ? (
         <div className="card find-friends-cnt">
           <p className="card-title">Recommended new friends:</p>
-          { nonFriends }
+          <div className='find-friends-list'>
+            { nonFriends }
+          </div>
         </div>
       ) : null
     );
@@ -76,7 +78,9 @@ const FindFriends = (props) => {
     const confirmFriendships = listConfirm.length > 0 ? (
       <div className="card find-friends-cnt">
         <p className="card-title">Confirm friendships:</p>
-        { listConfirm }
+        <div className='find-friends-list'>
+          { listConfirm }
+        </div>
       </div>
     ) : null;
     
@@ -90,7 +94,9 @@ const FindFriends = (props) => {
     const pendingFriendships = listPending.length > 0 ? (
       <div className="card find-friends-cnt">
         <p className="card-title">Pending friendships:</p>
-        { listPending }
+        <div className='find-friends-list'>
+          { listPending }
+        </div>
       </div>
     ) : null;
     

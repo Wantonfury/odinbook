@@ -1,8 +1,8 @@
+import '../styles/Loader.css';
+
 const LoadingIcon = () => {
   return (
-    <div>
-      <span>Loading...</span>
-    </div>
+    <div className="loader" ><div className="circle border"></div></div>
   );
 }
 

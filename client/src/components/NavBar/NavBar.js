@@ -1,5 +1,4 @@
 import '../../styles/NavBar.css';
-import UserProfilePicture from '../UserProfilePicture';
 import HomeIcon from '../../assets/images/home.svg';
 import { useContext } from "react";
 import UserContext from '../../contexts/UserContext';

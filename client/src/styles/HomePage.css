@@ -1,6 +1,7 @@
 #homepage {
   display: flex;
   justify-content: space-between;
+  position: relative;
   
   padding: 20px;
   
@@ -18,10 +19,20 @@
 .homepage-left {
   width: 200px;
   margin-left: auto;
+  height: 100%;
+  
+  position: -webkit-sticky;
+  position: sticky;
+  top: 70px;
 }
 
 .homepage-right {
   width: 200px;
+  height: 100%;
   margin-right: auto;
   margin-left: 50px;
+  
+  position: -webkit-sticky;
+  position: sticky;
+  top: 70px;
 }

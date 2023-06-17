@@ -4,11 +4,12 @@
   justify-content: center;
   align-items: center;
   
+  min-width: 300px;
   width: 300px;
-  height: 200px;
+  min-height: 200px;
   
   padding: 10px;
-  gap: 20px;
+  gap: 10px;
   
   border-radius: 8px;
   
@@ -22,6 +23,7 @@
 .form input[type=text],
 .form input[type=password] {
   width: 90%;
+  height: 30px;
 }
 
 .form input:focus {
@@ -48,4 +50,8 @@
 .form-cnt > :first-child {
   margin-right: auto;
   width: 50%;
+}
+
+.form-shadows {
+  box-shadow: 4px 4px 5px rgba(128, 128, 128, 0.25);
 }

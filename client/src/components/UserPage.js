@@ -9,11 +9,13 @@ const UserPage = () => {
   
   return (
     <div className="user-page">
-      <UserInfo friendsCount={friendsCount} />
-      
-      <div className="user-page-cnt">
-        <UserFriends setFriendsCount={setFriendsCount} />
-        <UserPosts />
+      <div className='user-page-cnt'>
+        <UserInfo friendsCount={friendsCount} />
+        
+        <div className="user-page-details">
+          <UserFriends setFriendsCount={setFriendsCount} />
+          <UserPosts />
+        </div>
       </div>
     </div>
   );

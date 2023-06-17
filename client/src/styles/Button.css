@@ -50,3 +50,9 @@
 .btn-short {
   height: 30px;
 }
+
+.btn:disabled,
+.btn[disabled] {
+  background-color: gray;
+  cursor: default;
+}

@@ -1,5 +1,4 @@
 import './styles/App.css';
-import './styles/Container.css';
 import LoginPage from './components/LoginPage';
 import UserContext from './contexts/UserContext';
 import SocketContext from './contexts/SocketContext';
@@ -30,6 +29,8 @@ function App() {
   const [userPageId, setUserPageId] = useState(null);
   
   useEffect(() => {
+    if (!loading) return;
+    
     checkLogin()
       .then(res => {
         setUser({
@@ -54,7 +55,7 @@ function App() {
         <ChatContext.Provider value={{ chatBoxId, setChatBoxId }}>
           <ModalProvider>
             <div className="App">
-              {loading ? null : <NavBar />}
+              {loading ? null : user.loggedIn ? <NavBar /> : null}
               
               {
                 loading ? <LoadingIcon /> : 

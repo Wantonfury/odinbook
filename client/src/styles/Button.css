@@ -46,3 +46,7 @@
 .btn-no-shadow {
   box-shadow: none;
 }
+
+.btn-short {
+  height: 30px;
+}

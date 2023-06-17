@@ -1,8 +1,8 @@
-import '../styles/UserPage.css';
-import UserPosts from './UserPage/UserPosts';
+import '../../styles/UserPage.css';
+import UserPosts from './UserPosts';
 import { useState } from 'react';
-import UserFriends from './UserPage/UserFriends';
-import UserInfo from './UserPage/UserInfo';
+import UserFriends from './UserFriends';
+import UserInfo from './UserInfo';
 
 const UserPage = () => {
   const [friendsCount, setFriendsCount] = useState('');

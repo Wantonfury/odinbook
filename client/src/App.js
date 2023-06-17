@@ -8,7 +8,7 @@ import LoadingIcon from './components/LoadingIcon';
 import { checkLogin } from './apis/userAPI';
 import { ModalProvider } from './contexts/ModalContext';
 import NavBar from './components/NavBar/NavBar';
-import UserPage from './components/UserPage';
+import UserPage from './components/UserPage/UserPage';
 import ChatBox from './components/ChatBox/ChatBox';
 import ChatContext from './contexts/ChatContext';
 import io from 'socket.io-client';

@@ -17,7 +17,7 @@ const UserInfo = (props) => {
   const { user, userPageId } = useContext(UserContext);
   
   useEffect(() => {
-    if (!userPageId || !loading) return;
+    if (!userPageId) return;
     
     Promise.all([
       getUser(userPageId)

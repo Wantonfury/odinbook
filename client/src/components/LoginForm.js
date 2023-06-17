@@ -36,11 +36,23 @@ const LoginForm = ({ reload }) => {
   }
   
   return (
-    <form className="form form-border" onSubmit={handleSubmit}>
+    <form className="form form-border form-shadows" onSubmit={handleSubmit}>
+      <h2 className='login-page-title'>Log In</h2>
+      
       <input type="text" name="username" placeholder="Username" onChange={handleChange} />
       <input type="password" name="password" placeholder="Password" onChange={handleChange} />
       <button className="btn" type="submit">Log in</button>
       <button className="btn" type="button">Sign up</button>
+      
+      <hr style={{
+        width: '80%',
+        backgroundColor: 'rgba(128, 128, 128, 0.5)',
+        border: 'none',
+        height: '1px'
+      }} />
+      
+      <button className='btn btn-short' type='button'>Try Demo Account 1</button>
+      <button className='btn btn-short' type='button'>Try Demo Account 2</button>
     </form>
   );
 }

@@ -1,13 +1,17 @@
 import LoginForm from './LoginForm';
 import OBPresentation from './OBPresentation';
+import '../styles/LoginPage.css';
 
 const LoginPage = ({ reload }) => {
   return (
-    <div className="cnt-horizontal cnt-screen-width cnt-screen-height" style={{
-      backgroundColor: 'var(--background)'
-    }}>
-      <OBPresentation />
-      <LoginForm reload={reload} />
+    <div className='login-page'>
+      <div className="login-page-cnt">
+        <div><OBPresentation /></div>
+        
+        <div className='vl'></div>
+        
+        <div><LoginForm reload={reload} /></div>
+      </div>
     </div>
   );
 }

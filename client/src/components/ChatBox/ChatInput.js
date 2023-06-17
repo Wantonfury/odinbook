@@ -33,7 +33,7 @@ const ChatInput = () => {
   return (
     <form className="chatbox-input" onSubmit={handleSubmit}>
       <textarea value={message} onChange={handleChange} />
-      <button type="submit" className="btn">Send</button>
+      <button disabled={message.length === 0 ? true : false} type="submit" className="btn">Send</button>
     </form>
   );
 }

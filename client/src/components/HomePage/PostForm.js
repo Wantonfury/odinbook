@@ -42,14 +42,14 @@ const PostForm = (props) => {
   
   return (
     <>
-      <form className="form" onSubmit={handleSubmit}>
+      <form className="form form-wide" onSubmit={handleSubmit}>
         <textarea rows="20" name="message" value={formData.message} onChange={handleChange} />
         
         <div className='form-cnt'>
           <label htmlFor='photo'>Add photo: </label>
           <input type='file' name='photo' accept='.png, .jpg, .jpeg, .svg, .webp' onChange={handleFile} />
         </div>
-        <button className="btn btn-wide" type="submit">Post</button>
+        <button className="btn btn-wide" type="submit" disabled={formData.message?.length === 0 ? true : false}>Post</button>
       </form>
       
       {

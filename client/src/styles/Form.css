@@ -16,6 +16,10 @@
   background-color: white;
 }
 
+.form-wide {
+  width: 95%;
+}
+
 .form-border {
   border: 1px solid var(--btn-clr);
 }

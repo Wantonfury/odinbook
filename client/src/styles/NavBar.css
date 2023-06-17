@@ -128,4 +128,6 @@
   
   -moz-animation-name: fade-in;
   -moz-animation-duration: 200ms;
+  
+  box-shadow: 4px 4px 5px rgba(128, 128, 128, 0.25);
 }

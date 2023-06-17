@@ -13,7 +13,7 @@ const UserPosts = (props) => {
   const { userPageId } = useContext(UserContext);
   
   useEffect(() => {
-    if (!userPageId) return;
+    if (!userPageId || !loading) return;
     
     getPostsUser(userPageId)
       .then(res => 

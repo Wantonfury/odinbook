@@ -1,20 +1,28 @@
 import '../../styles/Form.css';
 import '../../styles/ErrorModal.css';
-import { uploadProfileFile } from '../../apis/fileAPI';
+import { uploadProfileFile } from '../../apis/userAPI';
 import { useContext, useState} from 'react';
 import { ModalContext } from '../../contexts/ModalContext';
+import UserContext from '../../contexts/UserContext';
 
 const EditProfileForm = () => {
   const { handleModal } = useContext(ModalContext);
+  const { user, setUser } = useContext(UserContext);
   const [profile, setProfile] = useState('');
   const [errors, setErrors] = useState();
   
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log({ 'profile': profile });
     
     uploadProfileFile({ 'profile': profile })
-      .then(() => handleModal())
+      .then(res => {
+        handleModal();
+        
+        setUser({
+          ...user,
+          pfp: res.data
+        });
+      })
       .catch(err => setErrors(err.response.data.errors));
   }
   

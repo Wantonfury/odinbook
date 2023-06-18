@@ -1,15 +1,17 @@
 import { addLike } from "../../apis/postsAPI";
 import Comments from "./Comments";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import UserProfilePicture from "../UserProfilePicture";
 import UserName from "../UserName";
 import IconThumbUp from '../../assets/images/thumb-up.svg';
 import dayjs from "dayjs";
 import relativeTime from 'dayjs/plugin/relativeTime';
+import UserContext from "../../contexts/UserContext";
 dayjs.extend(relativeTime);
 
 const Post = ({ post, updatePost }) => {
   const [showComments, setShowComments] = useState(false);
+  const { user } = useContext(UserContext);
   
   const handleLike = (e) => {
     e.target.classList.contains('liked') ? e.target.classList.remove('liked') : e.target.classList.add('liked');
@@ -29,7 +31,7 @@ const Post = ({ post, updatePost }) => {
     <div className="post card">
       <div className='post-content'>
         <div className="post-user">
-          <UserProfilePicture pfp={post.user.pfp} id={post.user.id} />
+          <UserProfilePicture pfp={post.user.id === user.id ? user.pfp : post.user.pfp} id={post.user.id} />
           
           <div className="post-user-info">
             <UserName full_name={`${post.user.first_name} ${post.user.last_name}`} id={post.user.id} />

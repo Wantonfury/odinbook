@@ -1,0 +1,9 @@
+.signup-title {
+  margin-top: 0px;
+  margin-bottom: 20px;
+  
+  padding: 0;
+  
+  color: var(--btn-clr);
+  text-shadow: 2px 2px 3px rgba(128, 128, 128, 0.25);
+}

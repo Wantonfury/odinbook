@@ -16,6 +16,10 @@
   background-color: white;
 }
 
+.form-no-padding {
+  padding: 0px;
+}
+
 .form-wide {
   width: 95%;
 }
@@ -25,7 +29,8 @@
 }
 
 .form input[type=text],
-.form input[type=password] {
+.form input[type=password],
+.form input[type=number] {
   width: 90%;
   height: 30px;
 }

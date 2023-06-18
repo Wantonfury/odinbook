@@ -11,8 +11,8 @@ export const logout = () => {
   return axios.post(`${SERVER}/auth/logout`);
 }
 
-export const signup = () => {
-  
+export const signup = (formData) => {
+  return axios.post(`${SERVER}/auth/signup`, { ...formData });
 }
 
 export const checkLogin = () => {

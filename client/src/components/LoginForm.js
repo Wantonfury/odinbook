@@ -2,10 +2,14 @@ import '../styles/Form.css';
 import '../styles/Button.css';
 import { useState, useContext } from "react";
 import { login } from "../apis/userAPI";
-import UserContext from '../contexts/UserContext';
+import SignupForm from './SignupForm';
+import { ModalContext } from '../contexts/ModalContext';
+import useAuthentication from '../hooks/useAuthentication';
+import ErrorModal from './ErrorModal';
 
 const LoginForm = ({ reload }) => {
-  const { setUser } = useContext(UserContext);
+  const { handleModal } = useContext(ModalContext);
+  const { authLogin } = useAuthentication();
   
   const [data, setData] = useState({
     username: '',
@@ -17,13 +21,10 @@ const LoginForm = ({ reload }) => {
     
     login(data)
       .then(res => {
-        setUser({
-          ...res.data,
-          loggedIn: true
-        });
+        authLogin(res.data);
         reload();
       })
-      .catch(err => console.log(err));
+      .catch(err => handleModal(<ErrorModal errors={err.response.data.errors } />));
     
     return true;
   }
@@ -42,7 +43,7 @@ const LoginForm = ({ reload }) => {
       <input type="text" name="username" placeholder="Username" onChange={handleChange} />
       <input type="password" name="password" placeholder="Password" onChange={handleChange} />
       <button className="btn" type="submit">Log in</button>
-      <button className="btn" type="button">Sign up</button>
+      <button className="btn" type="button" onClick={() => handleModal(<SignupForm />)}>Sign up</button>
       
       <hr style={{
         width: '80%',

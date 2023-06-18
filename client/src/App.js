@@ -45,6 +45,14 @@ function App() {
   }, [loading]);
   
   useEffect(() => {
+    socket.emit('join_updates');
+    
+    return () => {
+      socket.emit('leave_updates');
+    }
+  }, []);
+  
+  useEffect(() => {
     if (userPageId) setCurrentPage(<UserPage />);
     else setCurrentPage(<HomePage />);
   }, [userPageId]);

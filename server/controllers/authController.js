@@ -1,26 +1,14 @@
 const User = require('../models/user');
-const validation = require('../utils/middleware').validation;
 const passport = require('passport');
-const cookieOpts = require('../utils/settings').cookieOpts;
 const { generateUserData } = require('../utils/miscellaneous');
-
-// const generateUserData = (user) => {
-//   return {
-//     username: user.username,
-//     first_name: user.first_name,
-//     last_name: user.last_name,
-//     full_name: user.full_name,
-//     pfp: user.pfp,
-//     id: user._id
-//   }
-// }
+const { validationSignup, validation } = require('../utils/middleware');
 
 exports.login = [
   validation,
   (req, res, next) => {
     passport.authenticate('login', (err, user, info) => {
       if (err) return next(err);
-      if (!user) return res.status(400).json({ message: info.message });
+      if (!user) return res.status(400).json({ errors: [info.message] });
       
       req.login(user, (err) => {
         if (err) return next(err);
@@ -40,10 +28,11 @@ exports.isLoggedIn = (req, res, next) => {
 
 exports.signup = [
   validation,
+  validationSignup,
   (req, res, next) => {
     User.findOne({ username: req.body.username })
       .then(userFound => {
-        if (userFound) return res.status(401).json({ message: 'Username already exists.' });
+        if (userFound) return res.status(401).json({ errors: ['Username already exists.'] });
         
         const user = new User({
           username: req.body.username,
@@ -57,7 +46,7 @@ exports.signup = [
           .then(() => {
             req.login(user, err => {
               if (err) return next(err);
-              res.status(200).json({ username: user.username });
+              res.status(200).json(generateUserData(user));
             });
           })
           .catch(err => next(err));

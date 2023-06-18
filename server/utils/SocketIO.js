@@ -3,6 +3,7 @@ const { Server } = require('socket.io');
 let io = null;
 
 const notificationRoom = 'not_';
+const updateRoom = 'upd_';
 
 const init = () => {
   io.on('connection', socket => {
@@ -31,7 +32,15 @@ const init = () => {
       const{ chat } = data;
       
       socket.leave(notificationRoom + chat);
-    })
+    });
+    
+    socket.on('join_updates', () => {
+      socket.join(updateRoom);
+    });
+    
+    socket.on('leave_updates', () => {
+      socket.leave(updateRoom);
+    });
     
     socket.on('send_message', (data) => {
       const { chat, message } = data;
@@ -52,6 +61,13 @@ exports.setupIO = (server) => {
   init();
 }
 
-exports.emit = (chat, event, data, options = { notification: false }) => {
-  io.in(options.notification ? notificationRoom + chat : chat).emit(event, data);
+exports.emit = (chat, event, data, options = { notification: false, update: false }) => {
+  let finalChat = chat;
+  
+  if (options.notification) finalChat = notificationRoom + chat;
+  else if (options.update) finalChat = updateRoom + chat;
+  
+  console.log('Emited to ', finalChat, ' - ', event, ' - ', data);
+  
+  io.in(finalChat).emit(event, data);
 }

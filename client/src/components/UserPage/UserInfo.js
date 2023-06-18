@@ -19,6 +19,12 @@ const UserInfo = (props) => {
   useEffect(() => {
     if (!userPageId) return;
     
+    if (userPageId === user.id) {
+      setUserData(user);
+      setLoading(false);
+      return;
+    }
+    
     Promise.all([
       getUser(userPageId)
         .then(res => {
@@ -28,7 +34,7 @@ const UserInfo = (props) => {
         .then(res => setFriendData(res.data))
     ])
       .finally(() => setLoading(false));
-  }, [loading, userPageId]);
+  }, [loading, userPageId, user]);
   
   return (
     <div className="card user-page-info">

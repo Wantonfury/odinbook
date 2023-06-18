@@ -36,6 +36,30 @@ const LoginForm = ({ reload }) => {
     })
   }
   
+  const handleDemoAccount = (acc) => {
+    const demoUser = {};
+    
+    switch (acc) {
+      case 1:
+        demoUser.username = 'alex10';
+        demoUser.password = 'password';
+        break;
+      case 2:
+        demoUser.username = 'alex11';
+        demoUser.password = 'password';
+        break;
+      default:
+        break;
+    }
+    
+    login(demoUser)
+      .then(res => {
+        authLogin(res.data);
+        reload();
+      })
+      .catch(err => handleModal(<ErrorModal errors={err.response.data.errors } />));
+  }
+  
   return (
     <form className="form form-border form-shadows" onSubmit={handleSubmit}>
       <h2 className='login-page-title'>Log In</h2>
@@ -52,8 +76,8 @@ const LoginForm = ({ reload }) => {
         height: '1px'
       }} />
       
-      <button className='btn btn-short' type='button'>Try Demo Account 1</button>
-      <button className='btn btn-short' type='button'>Try Demo Account 2</button>
+      <button className='btn btn-short' type='button' onClick={() => handleDemoAccount(1)}>Try Demo Account 1</button>
+      <button className='btn btn-short' type='button' onClick={() => handleDemoAccount(2)}>Try Demo Account 2</button>
     </form>
   );
 }

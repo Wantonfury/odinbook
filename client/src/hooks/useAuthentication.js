@@ -5,11 +5,14 @@ import { logOut } from '../apis/userAPI';
 const useAuthentication = () => {
   const { setUser, setUserPageId } = useContext(UserContext);
   
-  const login = () => {
-    
+  const authLogin = (user) => {
+    setUser({
+      ...user,
+      loggedIn: true
+    });
   }
   
-  const logout = () => {
+  const authLogout = () => {
     logOut()
       .then(() => {
         setUser({ loggedIn: false });
@@ -17,7 +20,7 @@ const useAuthentication = () => {
       });
   }
   
-  return { login, logout };
+  return { authLogin, authLogout };
 }
 
 export default useAuthentication;

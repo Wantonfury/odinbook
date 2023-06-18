@@ -12,6 +12,7 @@ import UserPage from './components/UserPage/UserPage';
 import ChatBox from './components/ChatBox/ChatBox';
 import ChatContext from './contexts/ChatContext';
 import io from 'socket.io-client';
+import Footer from './components/Footer';
 
 const SERVER = process.env.REACT_APP_SERVER;
 const socket = io.connect(SERVER);
@@ -71,6 +72,8 @@ function App() {
               }
               
               { chatBoxId && user.loggedIn ? <ChatBox /> : null }
+              
+              <Footer />
             </div>
           </ModalProvider>
         </ChatContext.Provider>

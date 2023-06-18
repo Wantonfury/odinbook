@@ -18,7 +18,6 @@ const cookieOpts = require('./utils/settings').cookieOpts;
 const usersRouter = require('./routes/users');
 const postsRouter = require('./routes/posts');
 const authRouter = require('./routes/auth');
-const filesRouter = require('./routes/files');
 const messageRouter = require('./routes/messages');
 
 const mongoDB = process.env.MONGODB_URI;
@@ -62,7 +61,13 @@ passport.use("login", new LocalStrategy((username, password, done) => {
 }));
 
 passport.serializeUser((user, done) => {
-  done(null, { username: user.username, _id: user._id, first_name: user.first_name, last_name: user.last_name, full_name: user.full_name, pfp: user.pfp });
+  done(null, {
+    username: user.username,
+    _id: user._id, first_name: user.first_name,
+    last_name: user.last_name,
+    full_name: user.full_name,
+    pfp: user.pfp
+  });
 });
 
 passport.deserializeUser((user, done) => {
@@ -72,7 +77,6 @@ passport.deserializeUser((user, done) => {
 app.use('/auth', authRouter);
 app.use('/users', ensureAuthenticated, usersRouter);
 app.use('/posts', ensureAuthenticated, postsRouter);
-app.use('/files', ensureAuthenticated, filesRouter);
 app.use('/messages', ensureAuthenticated, messageRouter);
 
 // catch 404 and forward to error handler

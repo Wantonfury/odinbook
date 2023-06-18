@@ -18,6 +18,11 @@
   gap: 10px;
   
   width: fit-content;
+  
+  height: fit-content;
+  max-height: 80vh;
+  
+  overflow-y: auto;
 }
 
 .contact {

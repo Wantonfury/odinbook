@@ -4,14 +4,14 @@ import useAuthentication from "../../hooks/useAuthentication";
 
 const NavAccountOptions = () => {
   const { user, setUserPageId } = useContext(UserContext);
-  const { logout } = useAuthentication();
+  const { authLogout } = useAuthentication();
   
   const handleAccount = () => {
     setUserPageId(user.id);
   }
   
   const handleLogOut = () => {
-    logout();
+    authLogout();
   }
   
   return (

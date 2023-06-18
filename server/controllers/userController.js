@@ -1,7 +1,7 @@
 const User = require('../models/user');
 const Friendship = require('../models/friendship');
 const { generateUserData } = require('../utils/miscellaneous');
-
+const fs = require('fs');
 
 exports.getNonFriends = async (req, res, next) => {
   const start = req.body.start;
@@ -144,4 +144,20 @@ exports.changeName = (req, res, next) => {
         .catch(err => next(err));
     })
     .catch(err => next(err));
+}
+
+exports.uploadProfileFile = (req, res, next) => {
+  User.findOne({ _id: req.user._id })
+    .then(user => {
+      if (!req.file) return res.status(400).json({ errors: ['Please provide a new profile picture.']});
+      
+      if (user.pfp && user.pfp.length > 0) fs.unlinkSync(user.pfp, err => next(err));
+      
+      user.pfp = req.file.path;
+      req.user.pfp = req.file.path;
+      
+      user.save()
+        .then(() => res.status(200).json(user.pfp))
+        .catch(err => next(err));
+    })
 }

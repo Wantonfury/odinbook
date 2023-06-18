@@ -62,3 +62,7 @@ export const changeName = (first_name, last_name) => {
 export const logOut = () => {
   return axios.post(`${SERVER}/auth/logout`);
 }
+
+export const uploadProfileFile = (file) => {
+  return axios.post(`${SERVER}/users/upload_profile_file`, file, { headers: { "Content-Type": 'multipart/form-data' }});
+}

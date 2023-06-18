@@ -2,6 +2,8 @@ const User = require('../models/user');
 const Friendship = require('../models/friendship');
 const { generateUserData } = require('../utils/miscellaneous');
 const fs = require('fs');
+const { upload } = require('../utils/multer');
+const { emit } = require('../utils/SocketIO');
 
 exports.getNonFriends = async (req, res, next) => {
   const start = req.body.start;
@@ -68,6 +70,7 @@ exports.addFriend = async (req, res, next) => {
     
     friendship.save()
       .then(() => {
+        emit('', 'update_friends', { friends: [...friendship.friendship] }, { update: true });
         res.status(200).send();
       })
       .catch(err => next(err));
@@ -81,7 +84,10 @@ exports.removeFriend = (req, res, next) => {
     { friendship: req.user._id },
     { friendship: req.body.id }
   ], pending: false })
-    .then(() => res.status(200).send())
+    .then(friendship => {
+      emit('', 'update_friends', { friends: [...friendship.friendship] }, { update: true });
+      res.status(200).send();
+    })
     .catch(err => next(err));
 }
 
@@ -147,7 +153,10 @@ exports.changeName = (req, res, next) => {
 }
 
 exports.uploadProfileFile = (req, res, next) => {
-  User.findOne({ _id: req.user._id })
+  upload.single('profile')(req, res, (err) => {
+    if (err) return res.status(400).json({ errors: [err] });
+    
+    User.findOne({ _id: req.user._id })
     .then(user => {
       if (!req.file) return res.status(400).json({ errors: ['Please provide a new profile picture.']});
       
@@ -160,4 +169,7 @@ exports.uploadProfileFile = (req, res, next) => {
         .then(() => res.status(200).json(user.pfp))
         .catch(err => next(err));
     })
+  })
+  
+  
 }

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { getNonFriends, addFriend, getPendingFriends } from '../../apis/userAPI';
 import '../../styles/User.css';
 import '../../styles/Button.css';
@@ -7,11 +7,15 @@ import '../../styles/FindFriends.css';
 import '../../styles/Card.css';
 import UserProfilePicture from "../UserProfilePicture";
 import UserName from "../UserName";
+import SocketContext from "../../contexts/SocketContext";
+import UserContext from "../../contexts/UserContext";
 
 const FindFriends = (props) => {
   const [users, setUsers] = useState([]);
   const [pendingFriends, setPendingFriends] = useState([]);
   const [loading, setLoading] = useState(true);
+  const { socket } = useContext(SocketContext);
+  const { user } = useContext(UserContext);
   let userCount = 10;
   
   useEffect(() => {
@@ -35,6 +39,16 @@ const FindFriends = (props) => {
     .finally(() => setLoading(false));
   }, [userCount, loading]);
   
+  useEffect(() => {
+    const handleEvent = (data) => {
+      if (data.friends.includes(user.id)) setLoading(true);
+    }
+    
+    socket.on('update_friends', handleEvent);
+    
+    return () => socket.off('update_friends', handleEvent);
+  }, [socket, user.id]);
+  
   const handleAdd = (e) => {
     addFriend(e.target.value)
       .then(() => {
@@ -55,8 +69,6 @@ const FindFriends = (props) => {
   }
   
   const listNonFriends = () => {
-    if (users.length === 0) return;
-    
     const nonFriends = users.map((user, index) => generateUserCard(user, index, 'Add'));
     
     return (
@@ -67,7 +79,7 @@ const FindFriends = (props) => {
             { nonFriends }
           </div>
         </div>
-      ) : null
+      ) : <div className='card find-friends-cnt'><p className='card-title'>No new friends available</p></div>
     );
   }
   

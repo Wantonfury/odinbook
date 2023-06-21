@@ -3,15 +3,16 @@ import Comments from "./Comments";
 import { useContext, useState } from "react";
 import UserProfilePicture from "../UserProfilePicture";
 import UserName from "../UserName";
-import IconThumbUp from '../../assets/images/thumb-up.svg';
 import dayjs from "dayjs";
 import relativeTime from 'dayjs/plugin/relativeTime';
 import UserContext from "../../contexts/UserContext";
+import { ThemeContext } from "../../contexts/ThemeContext";
 dayjs.extend(relativeTime);
 
 const Post = ({ post, updatePost }) => {
   const [showComments, setShowComments] = useState(false);
   const { user } = useContext(UserContext);
+  const { icons } = useContext(ThemeContext);
   
   const handleLike = (e) => {
     e.target.classList.contains('liked') ? e.target.classList.remove('liked') : e.target.classList.add('liked');
@@ -44,7 +45,7 @@ const Post = ({ post, updatePost }) => {
         
         <div className="post-details">
           <div className='post-likes'>
-            <img src={IconThumbUp} alt='Like' />
+            <img src={icons.like} alt='Like' />
             <span>{post.likes}</span>
           </div>
           <span className='post-comments' onClick={handleComments}>{post.commentsCount} comments</span>

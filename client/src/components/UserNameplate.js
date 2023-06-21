@@ -1,10 +1,10 @@
-import DefaultProfileImage from '../assets/images/account-default-image.svg';
 import '../styles/Contacts.css';
 import { useContext, useEffect, useState } from "react";
 import ChatContext from '../contexts/ChatContext';
 import { getUnreadMessagesCount, getChatId } from '../apis/chatAPI';
 import SocketContext from '../contexts/SocketContext';
 import UserContext from '../contexts/UserContext';
+import { ThemeContext } from '../contexts/ThemeContext';
 
 const SERVER = process.env.REACT_APP_SERVER;
 
@@ -12,6 +12,7 @@ const UserNameplate = ({ nameplateUser }) => {
   const { user } = useContext(UserContext);
   const { chatBoxId, setChatBoxId } = useContext(ChatContext);
   const { socket } = useContext(SocketContext);
+  const { icons } = useContext(ThemeContext);
   const [chatId, setChatId] = useState(null);
   const [unreadMessages, setUnreadMessages] = useState();
   
@@ -61,7 +62,7 @@ const UserNameplate = ({ nameplateUser }) => {
   
   return (
     <div className={`contact ${unreadMessages > 0 ? 'contact-notification' : ''}`} onClick={handleClick}>
-      <img src={nameplateUser.pfp && nameplateUser.pfp.length > 0 ? `${SERVER}/${nameplateUser.pfp}` : DefaultProfileImage} alt='Profile' />
+      <img src={nameplateUser.pfp && nameplateUser.pfp.length > 0 ? `${SERVER}/${nameplateUser.pfp}` : icons.account} alt='Profile' />
       <span>{ nameplateUser.first_name + ' ' + nameplateUser.last_name }</span>
       <p style={{
         textAlign: 'right',

@@ -47,6 +47,7 @@
   padding-right: 10px;
   
   background-color: rgba(0, 0, 0, 0.05);
+  color: var(--text-clr);
 }
 
 .post-input input:focus {
@@ -75,6 +76,7 @@
 
 .post-user {
   display: flex;
+  gap: 10px;
 }
 
 .post-user-info {

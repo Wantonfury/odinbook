@@ -13,7 +13,8 @@
   
   border-radius: 8px;
   
-  background-color: white;
+  background-color: var(--card);
+  color: var(--text-clr);
 }
 
 .form-no-padding {

@@ -13,6 +13,7 @@ import ChatBox from './components/ChatBox/ChatBox';
 import ChatContext from './contexts/ChatContext';
 import io from 'socket.io-client';
 import Footer from './components/Footer';
+import { ThemeProvider } from './contexts/ThemeContext';
 
 const SERVER = process.env.REACT_APP_SERVER;
 const socket = io.connect(SERVER);
@@ -63,18 +64,20 @@ function App() {
       <UserContext.Provider value={{ user, setUser, userPageId, setUserPageId }}>
         <ChatContext.Provider value={{ chatBoxId, setChatBoxId }}>
           <ModalProvider>
-            <div className="App">
-              {loading ? null : user.loggedIn ? <NavBar /> : null}
-              
-              {
-                loading ? <LoadingIcon /> : 
-                  user.loggedIn ? currentPage : <LoginPage reload={setLoading} />
-              }
-              
-              { chatBoxId && user.loggedIn ? <ChatBox /> : null }
-              
-              <Footer />
-            </div>
+            <ThemeProvider>
+              <div className="App">
+                {loading ? null : user.loggedIn ? <NavBar /> : null}
+                
+                {
+                  loading ? <LoadingIcon /> : 
+                    user.loggedIn ? currentPage : <LoginPage reload={setLoading} />
+                }
+                
+                { chatBoxId && user.loggedIn ? <ChatBox /> : null }
+                
+                <Footer />
+              </div>
+            </ThemeProvider>
           </ModalProvider>
         </ChatContext.Provider>
       </UserContext.Provider>

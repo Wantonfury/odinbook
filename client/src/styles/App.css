@@ -1,13 +1,3 @@
-:root {
-  --btn-clr: #3da9fc;
-  --btn-clr-hover: #038df6;
-  --btn-clr-active: #037bd7;
-  --btn-contacts-hover: #7cc6fb;
-  --btn-contacts-active: #4eb2fa;
-  --background: #d8eefe;
-  --card: white;
-}
-
 .App {
   display: flex;
   flex-direction: column;
@@ -20,6 +10,8 @@
   
   margin: 0;
   padding: 0;
+  
+  color: var(--text-clr);
   
   background-color: var(--background);
 }

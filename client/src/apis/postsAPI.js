@@ -15,8 +15,8 @@ export const getPostsUser = (id, fromDate = null) => {
   return axios.get(`${SERVER}/posts/get_posts_user`, { params: { id, fromDate }});
 }
 
-export const getComments = (id) => {
-  return axios.get(`${SERVER}/posts/get_comments?id=${id}`);
+export const getComments = (id, limit = 20, skip = 0) => {
+  return axios.get(`${SERVER}/posts/get_comments`, { params: { id, limit, skip } });
 }
 
 export const addComment = (id, comment) => {

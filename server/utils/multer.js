@@ -21,7 +21,7 @@ const upload = multer({
   fileFilter: (req, file, cb) => {
     const fileSize = parseInt(req.headers["content-length"]);
     
-    if (file.mimetype !== 'image/jpeg' || file.mimetype !== 'image/jpg' || file.mimetype !== 'image/png' || file.mimetype !== 'image/webp' || file.mimetype !== 'image/svg') {
+    if (!(file.mimetype == 'image/jpeg' || file.mimetype == 'image/png' || file.mimetype == 'image/webp' || file.mimetype == 'image/svg')) {
       return cb('File type must be .jpg, .jpeg, .png, .webp or .svg.', false);
     } else if (fileSize > 16777216) {
       return cb('File size must be below 16mb.', false);

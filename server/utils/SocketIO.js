@@ -67,7 +67,5 @@ exports.emit = (chat, event, data, options = { notification: false, update: fals
   if (options.notification) finalChat = notificationRoom + chat;
   else if (options.update) finalChat = updateRoom + chat;
   
-  console.log('Emited to ', finalChat, ' - ', event, ' - ', data);
-  
   io.in(finalChat).emit(event, data);
 }

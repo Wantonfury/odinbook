@@ -12,7 +12,7 @@ exports.login = [
       
       req.login(user, (err) => {
         if (err) return next(err);
-        res.status(200).json(generateUserData(req.user));
+        res.status(200).json(generateUserData(req.user, req));
       });
     })(req, res, next);
   }
@@ -20,7 +20,7 @@ exports.login = [
 
 exports.isLoggedIn = (req, res, next) => {
   if (req.isAuthenticated()) {
-    return res.status(200).json(generateUserData(req.user));
+    return res.status(200).json(generateUserData(req.user, req));
   }
   
   res.status(401).send();
@@ -46,7 +46,7 @@ exports.signup = [
           .then(() => {
             req.login(user, err => {
               if (err) return next(err);
-              res.status(200).json(generateUserData(user));
+              res.status(200).json(generateUserData(user, req));
             });
           })
           .catch(err => next(err));

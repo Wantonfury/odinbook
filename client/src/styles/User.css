@@ -25,6 +25,11 @@
   background: none !important;
   border: none;
   padding: 0 !important;
+  
+  overflow-x:auto;
+  min-width: 40px;
+  max-width: 100px;
+  text-align: left;
 }
 
 .user-profile-picture {
@@ -44,6 +49,7 @@
 
 .user-profile-name-span {
   font-weight: 600 !important;
+  
 }
 
 .user-profile-name-span:hover {

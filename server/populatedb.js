@@ -40,7 +40,7 @@ function createUsers(cb) {
   
   User.deleteMany({})
     .then(() => {
-      const fakeUsers = faker.helpers.multiple(createRandomUser, { count: 10 });
+      const fakeUsers = faker.helpers.multiple(createRandomUser, { count: 20 });
       
       async.each(fakeUsers, function(fakeUser, cb) {
         fs.appendFileSync('./users.txt', `${fakeUser.username}: ${fakeUser.password} - ${fakeUser.first_name} ${fakeUser.last_name}\n`,
@@ -79,7 +79,7 @@ const createRandomComment = (user, post) => {
     user: user._id,
     comment: faker.lorem.sentences({ min: 1, max: 3 }),
     post: post._id,
-    date: faker.date.past()
+    date: faker.date.between({ from: post.date, to: Date.now() })
   }
 }
 
@@ -89,7 +89,7 @@ function createPosts(cb) {
   Post.deleteMany({})
     .then(() => {
       async.each(users, (user, cb) => {
-        const fakePosts = faker.helpers.multiple(() => createRandomPost(user), { count: { min: 1, max: 10 }});
+        const fakePosts = faker.helpers.multiple(() => createRandomPost(user), { count: { min: 1, max: 5 }});
         
         async.each(fakePosts, (fakePost, cb) => {
           const post = new Post({ ...fakePost });
@@ -111,7 +111,7 @@ function interactPosts(cb) {
       const fakeComments = [];
       
       faker.helpers.maybe(() => post.likes = [...post.likes, user._id]);
-      faker.helpers.maybe(() => faker.helpers.multiple(() => fakeComments.push(createRandomComment(user, post)), { count: { min: 1, max: 10 }}));
+      faker.helpers.maybe(() => faker.helpers.multiple(() => fakeComments.push(createRandomComment(user, post)), { count: { min: 1, max: 3 }}));
       
       async.each(fakeComments, (fakeComment, cb) => {
         const comment = new Comment({ ...fakeComment });
@@ -135,13 +135,22 @@ function interactPosts(cb) {
 function setupFriendships(cb) {
   Friendship.deleteMany({})
     .then(() => {
-      const user1 = users[0];
+      const userPairs = [];
+      
+      for (let i = 0; i < users.length - 1; ++i) {
+        for (let j = i + 1; j < users.length; ++j) {
+          userPairs.push([users[i], users[j]]);
+        }
+      }
   
-      async.each(users.slice(1), (user2, cb) => {
+      async.each(userPairs, (userPair, cb) => {
+        const user1 = userPair[0];
+        const user2 = userPair[1];
+        
         const friendship = faker.helpers.maybe(() => new Friendship({
           friendship: [user1._id, user2._id],
           pending: faker.helpers.maybe(() => true, { probability: 0.2 }) ? true : false
-        }), { probability: 0.9 }); 
+        }), { probability: 0.7 }); 
         
         if (!friendship) {
           cb();
@@ -211,7 +220,7 @@ async.series([
   setupChats
 ], function(err, results) {
   if (err) console.log(err);
-  setTimeout(() => mongoose.connection.close(), 20000);
+  setTimeout(() => mongoose.connection.close(), 40000);
   
   console.log('Finished.');
 });

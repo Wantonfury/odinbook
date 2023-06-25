@@ -6,12 +6,13 @@ import { useContext, useEffect } from "react";
 import ChatLog from './ChatLog';
 import ChatInput from './ChatInput';
 import SocketContext from '../../contexts/SocketContext';
-import IconClose from '../../assets/images/close-circle.svg';
 import ChatContext from '../../contexts/ChatContext';
+import { ThemeContext } from '../../contexts/ThemeContext';
 
 const ChatBox = () => {
   const { chatBoxId, setChatBoxId } = useContext(ChatContext);
   const { socket } = useContext(SocketContext);
+  const { icons } = useContext(ThemeContext);
   
   useEffect(() => {
     if (!chatBoxId) return;
@@ -27,7 +28,7 @@ const ChatBox = () => {
   
   return (
     <div className="chatbox card">
-      <input type='image' className='svg' src={IconClose} alt='Close Chat' onClick={handleClose} style={{
+      <input type='image' className='svg' src={icons.close} alt='Close Chat' onClick={handleClose} style={{
         width: '30px',
         height: 'auto',
         marginLeft: 'auto'

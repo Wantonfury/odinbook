@@ -1,17 +1,18 @@
 import { useContext, useEffect, useState } from 'react';
 import '../../styles/Posts.css';
 import UserContext from '../../contexts/UserContext';
-import ArrowRight from '../../assets/images/arrow-right.svg';
 import { ModalContext } from '../../contexts/ModalContext';
 import PostForm from './PostForm';
 import '../../styles/SVG.css';
 import LoadingIcon from '../LoadingIcon';
 import { getPosts } from '../../apis/postsAPI';
 import Post from './Post';
+import { ThemeContext } from '../../contexts/ThemeContext';
 
 const Posts = () => {
   const { user } = useContext(UserContext);
   const { handleModal } = useContext(ModalContext);
+  const { icons } = useContext(ThemeContext);
   const [message, setMessage] = useState('')
   const [loading, setLoading] = useState(true);
   const [postsLoaded, setPostsLoaded] = useState(false);
@@ -65,7 +66,7 @@ const Posts = () => {
       <div className="posts">
         <div className="post card post-input">
           <input readOnly={true} type="text" placeholder={`What's on your mind, ${user.first_name}?`} value={message} onFocus={() => handleModal(<PostForm message={message} setMessage={setMessage} reload={setLoading} />)} />
-          <img className="svg" src={ArrowRight} alt="Arrow Right" />
+          <img className="svg" src={icons.send} alt="Arrow Right" />
         </div>
         
         {

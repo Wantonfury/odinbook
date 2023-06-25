@@ -24,7 +24,7 @@ exports.getNonFriends = async (req, res, next) => {
     
     const users = await User.find({ username: { $ne: req.user.username }, _id: { $nin: friends }}).limit(100);
     const nonFriends = users.reduce((arr, user) => {
-      arr.push(generateUserData(user));
+      arr.push(generateUserData(user, req));
       
       return arr;
     }, []);
@@ -40,7 +40,7 @@ exports.getPendingFriends = (req, res, next) => {
     .then(friendships => {
       const pending = friendships.map(friendship => {
         return {
-          ...generateUserData(friendship.friendship[0]._id == req.user._id ? friendship.friendship[1] : friendship.friendship[0]),
+          ...generateUserData(friendship.friendship[0]._id == req.user._id ? friendship.friendship[1] : friendship.friendship[0], req),
           pending: friendship.friendship[0]._id == req.user._id ? true : false
         };
       });
@@ -106,7 +106,7 @@ exports.checkFriend = (req, res, next) => {
 exports.getFriends = async (req, res, next) => {
   try {
     const friends = (await Friendship.find({ "friendship": req.user._id, "pending": false }).populate('friendship')).map(friendship => {
-      return generateUserData(friendship.friendship[0]._id == req.user._id ? friendship.friendship[1] : friendship.friendship[0]);
+      return generateUserData(friendship.friendship[0]._id == req.user._id ? friendship.friendship[1] : friendship.friendship[0], req);
     });
     
     return res.status(200).json(friends);
@@ -118,14 +118,14 @@ exports.getFriends = async (req, res, next) => {
 exports.getFriendsUser = (req, res, next) => {
   Friendship.find({ "friendship": req.query.id, pending: false }).populate('friendship')
     .then(friendships => {
-      res.status(200).json(friendships?.map(friendship => generateUserData(friendship.friendship[0]._id == req.query.id ? friendship.friendship[1] : friendship.friendship[0])));
+      res.status(200).json(friendships?.map(friendship => generateUserData(friendship.friendship[0]._id == req.query.id ? friendship.friendship[1] : friendship.friendship[0], req)));
     });
 }
 
 exports.getUser = (req, res, next) => {
   User.findOne({ _id: req.query.id })
     .then(user => {
-      res.status(200).json(!user ? [] : generateUserData(user));
+      res.status(200).json(!user ? [] : generateUserData(user, req));
     })
 }
 
@@ -134,7 +134,7 @@ exports.searchUsers = (req, res, next) => {
   
   User.find({ full_name: reg })
     .then(users => {
-      res.status(200).json(users ? users.map(user => generateUserData(user)) : []);
+      res.status(200).json(users ? users.map(user => generateUserData(user, req)) : []);
     })
     .catch(err => next(err));
 }
@@ -160,7 +160,7 @@ exports.uploadProfileFile = (req, res, next) => {
     .then(user => {
       if (!req.file) return res.status(400).json({ errors: ['Please provide a new profile picture.']});
       
-      if (user.pfp && user.pfp.length > 0) fs.unlinkSync(user.pfp, err => next(err));
+      if (user.pfp && user.pfp.length > 0 && fs.existsSync(user.pfp)) fs.unlinkSync(user.pfp, err => next(err));
       
       user.pfp = req.file.path;
       req.user.pfp = req.file.path;

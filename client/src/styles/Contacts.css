@@ -16,11 +16,12 @@
   align-items: center;
   
   gap: 10px;
+  padding-right: 4px;
   
   width: fit-content;
   
   height: fit-content;
-  max-height: 80vh;
+  max-height: 60vh;
   
   overflow-y: auto;
 }

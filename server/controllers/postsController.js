@@ -1,12 +1,15 @@
 const Post = require('../models/post');
+const Comment = require('../models/comment');
 const { body, validationResult } = require('express-validator');
 const { generatePost, generateComment } = require('../utils/miscellaneous');
 
 exports.get_posts_all = async (req, res, next) => {
   try {
-    const posts = (await Post.find(req.query.fromDate ? { date: { $lt: req.query.fromDate }} : {}).populate('user').sort({ 'date': -1 }).limit(10)).map(post => {
-      return generatePost(post, req.user._id);
-    });
+    const posts = await Promise.all((await Post.find(req.query.fromDate ? { date: { $lt: req.query.fromDate }} : {}).populate('user').sort({ 'date': -1 }).limit(10)).map(async post => {
+      let comments = await Comment.find({ post: post._id });
+      
+      return generatePost(post, req, comments.length);
+    }));
     
     res.status(200).json(posts);
   } catch(err) {
@@ -16,27 +19,28 @@ exports.get_posts_all = async (req, res, next) => {
 
 exports.get_posts_user = (req, res, next) => {
   Post.find(req.query.fromDate ? { user: req.query.id, date: { $lt: req.query.fromDate } } : { user: req.query.id }).populate('user').sort({ 'date': -1 }).limit(10)
-    .then(posts => res.status(200).json(posts?.map(post => generatePost(post, req.user._id))));
+    .then(posts => res.status(200).json(posts?.map(post => generatePost(post, req))))
+    .catch(err => next(err));
 }
 
 exports.get_comments = (req, res, next) => {
-  Post.findOne({ _id: req.query.id }).select('comments').populate('comments.user')
-    .then(post => {
-      res.status(200).json(post.comments.map(comment => generateComment(comment)));
+  Comment.find({ post: req.query.id }).sort({ date: -1 }).skip(req.query.skip).limit(req.query.limit).populate('user')
+    .then(comments => {
+      res.status(200).json(comments ? comments.map(comment => generateComment(comment)).reverse() : []);
     })
     .catch(err => next(err));
 }
 
 exports.get_comments_count = (req, res, next) => {
-  Post.findOne({ _id: req.query.id }).select('comments')
-    .then(post => res.status(200).json(post && post.comments ? post.comments.length : 0))
+  Comment.find({ post: req.query.id })
+    .then(comments => res.status(200).json(comments ? comments.length : 0))
     .catch(err => next(err));
 }
 
 exports.add_comment = [
-  body('comment', 'Comment must be between 1 and 100 characters.')
+  body('comment', 'Comment must be between 1 and 255 characters.')
     .trim()
-    .isLength({ min: 1, max: 100 })
+    .isLength({ min: 1, max: 255 })
     .escape(),
   (req, res, next) => {
     const errors = validationResult(req);
@@ -47,25 +51,21 @@ exports.add_comment = [
       });
     }
     
-    Post.findOne({ _id: req.body.id })
-      .then(post => {
-        post.comments.push({
-          user: req.user._id,
-          comment: req.body.comment
-        });
-        
-        post.save()
-          .then(() => {
-            res.status(200).json(post.comments.length);
-          })
-          .catch(err => next(err));
-      })
+    const comment = new Comment({
+      user: req.user._id,
+      comment: req.body.comment,
+      post: req.body.id,
+      date: Date.now()
+    });
+    
+    comment.save()
+      .then(comment => res.status(200).json(generateComment({ comment: comment.comment, date: comment.date, user: req.user })))
       .catch(err => next(err));
   }
 ]
 
 exports.post = [
-  body('message', 'Message must be between 1 and 255 characters.')
+  body('message', 'Message must be between 1 and 1000 characters.')
     .trim()
     .isLength({ min: 1, max: 255 })
     .escape(),
@@ -88,7 +88,7 @@ exports.post = [
     });
     
     post.save()
-      .then(post => res.status(200).json(generatePost(post)))
+      .then(post => res.status(200).json(generatePost(post, req)))
       .catch(err => next(err));
   }
 ]

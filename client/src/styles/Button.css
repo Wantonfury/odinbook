@@ -60,3 +60,11 @@
   background-color: gray;
   cursor: default;
 }
+
+.btn-text-colored {
+  color: var(--btn-clr);
+}
+
+.btn-text-bold {
+  font-weight: 700;
+}

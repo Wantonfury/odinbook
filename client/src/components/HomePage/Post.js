@@ -41,7 +41,7 @@ const Post = ({ post, updatePost }) => {
         </div>
         
         <span className='post-message'>{post.message}</span>
-        { post.photo && post.photo.length > 0 ? <img className='post-photo' src={`${process.env.REACT_APP_SERVER}/${post.photo}`} alt='Post' /> : null}
+        { post.photo && post.photo.length > 0 ? <img className='post-photo' src={post.photo} alt='Post' /> : null}
         
         <div className="post-details">
           <div className='post-likes'>
@@ -60,7 +60,7 @@ const Post = ({ post, updatePost }) => {
       </div>
       
       {
-        showComments ? <Comments id={post.id} updateCommentsCount={(commentsCount) => updatePost({ ...post, commentsCount })} /> : null
+        showComments ? <Comments id={post.id} commentsCount={post.commentsCount} updateCommentsCount={(commentsCount) => post.commentsCount = commentsCount} /> : null
       }
     </div>
   );

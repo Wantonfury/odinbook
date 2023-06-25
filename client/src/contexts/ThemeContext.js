@@ -6,12 +6,16 @@ import IconHomeLight from '../assets/images/home.svg';
 import IconThumbUpLight from '../assets/images/thumb-up.svg';
 import IconGithubLight from '../assets/images/github-mark.png';
 import IconThemeLight from '../assets/images/theme-light.svg';
+import IconSendLight from '../assets/images/arrow-right.svg';
+import IconCloseLight from '../assets/images/close-circle.svg';
 
 import IconAccountDark from '../assets/images/account-default-image-dark.svg';
 import IconHomeDark from '../assets/images/home-dark.svg';
 import IconThumbUpDark from '../assets/images/thumb-up-dark.svg';
 import IconGithubDark from '../assets/images/github-mark-white.png';
 import IconThemeDark from '../assets/images/theme-dark.svg';
+import IconSendDark from '../assets/images/arrow-right-dark.svg';
+import IconCloseDark from '../assets/images/close-circle-dark.svg';
 
 const ThemeContext = createContext();
 
@@ -32,7 +36,9 @@ const lightTheme = {
     home: IconHomeLight,
     like: IconThumbUpLight,
     github: IconGithubLight,
-    theme: IconThemeLight
+    theme: IconThemeLight,
+    send: IconSendLight,
+    close: IconCloseLight
   }
 }
 
@@ -53,7 +59,9 @@ const darkTheme = {
     home: IconHomeDark,
     like: IconThumbUpDark,
     github: IconGithubDark,
-    theme: IconThemeDark
+    theme: IconThemeDark,
+    send: IconSendDark,
+    close: IconCloseDark
   }
 }
 

@@ -1,12 +1,13 @@
 import { useContext } from 'react';
 import '../../styles/Button.css';
 import ChatContext from '../../contexts/ChatContext';
+import { getChatId } from '../../apis/chatAPI';
 
 const BtnMessage = ({ id }) => {
   const { setChatBoxId } = useContext(ChatContext);
   
   const handleClick = () => {
-    setChatBoxId(id);
+    getChatId([ id ]).then(res => setChatBoxId(res.data));
   }
   
   return (

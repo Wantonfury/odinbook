@@ -17,10 +17,18 @@ exports.get_posts_all = async (req, res, next) => {
   }
 }
 
-exports.get_posts_user = (req, res, next) => {
-  Post.find(req.query.fromDate ? { user: req.query.id, date: { $lt: req.query.fromDate } } : { user: req.query.id }).populate('user').sort({ 'date': -1 }).limit(10)
-    .then(posts => res.status(200).json(posts?.map(post => generatePost(post, req))))
-    .catch(err => next(err));
+exports.get_posts_user = async (req, res, next) => {
+  try {
+    const posts = await Promise.all((await Post.find(req.query.fromDate ? { user: req.query.id, date: { $lt: req.query.fromDate }} : { user: req.query.id }).populate('user').sort({ 'date': -1 }).limit(10)).map(async post => {
+      let comments = await Comment.find({ post: post._id });
+      
+      return generatePost(post, req, comments.length);
+    }));
+    
+    res.status(200).json(posts);
+  } catch(err) {
+    next(err);
+  }
 }
 
 exports.get_comments = (req, res, next) => {

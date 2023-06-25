@@ -4,6 +4,7 @@ const User = require('../models/user');
 const { body, validationResult } = require('express-validator');
 const { generateUserData } = require('../utils/miscellaneous');
 const { emit } = require('../utils/SocketIO');
+const mongoose = require('mongoose');
 
 const createChat = async (user, users) => {
   let chat = new Chat({
@@ -16,7 +17,7 @@ const createChat = async (user, users) => {
 }
 
 exports.getMessages = async (req, res, next) => {
-  Message.find({ chat: req.query.id }).sort({ date: -1 }).limit(req.query.limit ? -req.query.limit : -100).populate('sender')
+  Message.find({ chat: new mongoose.Types.ObjectId(req.query.id) }).sort({ date: -1 }).limit(req.query.limit ? -req.query.limit : -100).populate('sender')
     .then(messages => {
       const result = messages?.map(message => {
         return {
@@ -81,7 +82,7 @@ exports.addMessage = [
 ];
 
 exports.getUnreadMessagesCount = (req, res, next) => {
-  Message.find({ chat: req.query.id }).populate('sender')
+  Message.find({ chat: new mongoose.Types.ObjectId(req.query.id) }).populate('sender')
     .then(messages => {
       const result = messages?.filter(message => !message.read.includes(req.user._id)).map(message => {
         return {

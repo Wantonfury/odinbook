@@ -171,7 +171,7 @@ async function createMessages(chat, user, usersRead) {
       read: [user._id, ...usersRead],
       text: faker.lorem.words({ min: 1, max: 20 })
     }
-  }, { count: { min: 3, max: 10 }});
+  }, { count: { min: 5, max: 30 }});
 }
 
 function setupChats(cb) {

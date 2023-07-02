@@ -43,6 +43,7 @@ Create a .env file with the following:
   $ node populatedb "mongodb+srv://cooluser:coolpassword@cluster0.lz91hw2.mongodb.net/odinbook?retryWrites=true&w=majority"
   ```
 - Where the link in "" is replaced with a link to the mongodb deployment
+- Generated username and password can be found in users.txt file
 
 ### Start the server
 ```bash

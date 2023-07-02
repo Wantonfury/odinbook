@@ -10,7 +10,7 @@ const NavResults = ({ users }) => {
           users.map((user, index) => {
             return (
               <div key={index} className='nav-results-user'>
-                <UserProfilePicture id={user.id} />
+                <UserProfilePicture id={user.id} pfp={user.pfp} />
                 <UserName id={user.id} full_name={user.full_name} />
               </div>
             );

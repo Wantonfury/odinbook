@@ -34,6 +34,14 @@ Create a .env file with the following:
 - SESS_SECRET=secret | or any other preferred key
 - ORIGIN=http://localhost:3000 | or the website's address if hosted
 
+### Setup the MongoDB database
+- Create a mongodb database with a collection named odinbook
+- Run the following command to populate the database:
+  ```bash
+  $ node populatedb "mongodb+srv://cooluser:coolpassword@cluster0.lz91hw2.mongodb.net/odinbook?retryWrites=true&w=majority"
+  ```
+- Where the link in "" is replaced with a link to the mongodb instance
+
 ### Start the server
 ```bash
 # To start the server normally

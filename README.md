@@ -2,6 +2,8 @@
 
 ### This is a Facebook-inspired website designed to imitate its many features.
 
+## Link to live demo: https://odinbook-orzan.up.railway.app/
+
 ### Implemented features:
 - Posts, replies and likes
 - Friendships, ability to add, remove and confirm friendships

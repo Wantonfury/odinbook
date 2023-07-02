@@ -30,17 +30,17 @@ $ npm install
 
 ### Setup server .env
 Create a .env file with the following:
-- MONGODB_URI= a link to a mongodb instance with an 'odinbook' collection
+- MONGODB_URI= a link to a mongodb deployment with an 'odinbook' collection
 - SESS_SECRET=secret | or any other preferred key
 - ORIGIN=http://localhost:3000 | or the website's address if hosted
 
 ### Setup the MongoDB database
-- Create a mongodb database with a collection named odinbook
+- In MongoDB make sure you have a collection named odinbook
 - Run the following command to populate the database:
   ```bash
   $ node populatedb "mongodb+srv://cooluser:coolpassword@cluster0.lz91hw2.mongodb.net/odinbook?retryWrites=true&w=majority"
   ```
-- Where the link in "" is replaced with a link to the mongodb instance
+- Where the link in "" is replaced with a link to the mongodb deployment
 
 ### Start the server
 ```bash

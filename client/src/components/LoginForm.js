@@ -41,12 +41,12 @@ const LoginForm = ({ reload }) => {
     
     switch (acc) {
       case 1:
-        demoUser.username = 'alex10';
-        demoUser.password = 'password';
+        demoUser.username = 'Pattie0';
+        demoUser.password = 'Di8MQuQeNsWqEgc';
         break;
       case 2:
-        demoUser.username = 'alex11';
-        demoUser.password = 'password';
+        demoUser.username = 'Garrett3';
+        demoUser.password = 'Fx2GbCSdnChToJf';
         break;
       default:
         break;
